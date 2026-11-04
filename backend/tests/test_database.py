@@ -154,3 +154,4 @@ def test_audit_log_insertion(app):
         log = database.query_db("SELECT * FROM audit_logs WHERE id = ?", (log_id,), one=True)
         assert log["action"] == "SYSTEM_BOOT"
         assert log["details"] == "Schema verified successfully"
+

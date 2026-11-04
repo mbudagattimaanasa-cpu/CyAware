@@ -3,6 +3,8 @@ from datetime import datetime, timezone
 from flask import Flask, jsonify
 from .config import config_by_name
 from . import database
+from .routes.auth import auth_bp
+from .commands import register_commands
 
 
 def create_app(config_name=None):
@@ -20,8 +22,12 @@ def create_app(config_name=None):
     except OSError:
         pass
 
-    # Initialize database
+    # Initialize database and CLI commands
     database.init_app(app)
+    register_commands(app)
+
+    # Register API Blueprints
+    app.register_blueprint(auth_bp)
 
     # Global Security Headers
     @app.after_request
@@ -48,7 +54,7 @@ def create_app(config_name=None):
                 "status": "healthy" if db_status == "connected" else "degraded",
                 "database": db_status,
                 "timestamp": datetime.now(timezone.utc).isoformat(),
-                "version": "1.0.0-stage1"
+                "version": "1.0.0-stage2"
             },
             "message": "CyAware Backend API is operational."
         }), 200
@@ -63,6 +69,26 @@ def create_app(config_name=None):
                 "message": getattr(error, "description", "Bad Request")
             }
         }), 400
+
+    @app.errorhandler(401)
+    def unauthorized(error):
+        return jsonify({
+            "success": False,
+            "error": {
+                "code": "UNAUTHENTICATED",
+                "message": getattr(error, "description", "Authentication required.")
+            }
+        }), 401
+
+    @app.errorhandler(403)
+    def forbidden(error):
+        return jsonify({
+            "success": False,
+            "error": {
+                "code": "FORBIDDEN",
+                "message": getattr(error, "description", "Access denied.")
+            }
+        }), 403
 
     @app.errorhandler(404)
     def not_found(error):

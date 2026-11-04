@@ -32,3 +32,4 @@ def test_405_json_envelope(client):
     json_data = response.get_json()
     assert json_data["success"] is False
     assert json_data["error"]["code"] == "METHOD_NOT_ALLOWED"
+
