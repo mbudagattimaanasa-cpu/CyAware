@@ -1,5 +1,6 @@
+from datetime import timedelta
 import pytest
-from flask import jsonify
+from flask import jsonify, session
 from backend.app.middleware import admin_required, reset_all_rate_limits
 from backend.app.database import query_db, execute_db
 
@@ -126,7 +127,7 @@ def test_register_duplicate_username_and_email(client):
 
 
 def test_login_success_with_username_and_email(client):
-    """Test login works using either username or email."""
+    """Test login works using either username or email and returns csrf_token."""
     client.post("/api/auth/register", json={
         "username": "charlie_test",
         "email": "charlie@example.com",
@@ -139,15 +140,18 @@ def test_login_success_with_username_and_email(client):
         "password": "Password123"
     })
     assert res_user.status_code == 200
-    assert res_user.get_json()["success"] is True
+    user_data = res_user.get_json()
+    assert user_data["success"] is True
+    assert "csrf_token" in user_data["data"]
+    csrf_token = user_data["data"]["csrf_token"]
 
     # Check /api/auth/me using the session established
     me_res = client.get("/api/auth/me")
     assert me_res.status_code == 200
     assert me_res.get_json()["data"]["user"]["username"] == "charlie_test"
 
-    # Logout
-    logout_res = client.post("/api/auth/logout")
+    # Logout with valid CSRF header
+    logout_res = client.post("/api/auth/logout", headers={"X-CSRF-Token": csrf_token})
     assert logout_res.status_code == 200
 
     # Session should now be cleared
@@ -293,3 +297,144 @@ def test_cli_create_admin(runner, client):
     assert res.status_code == 200
     data = res.get_json()
     assert data["data"]["user"]["role"] == "admin"
+
+
+# =========================================================================
+# Additional Stage 2 Verification Tests: CSRF, Session Invalidation & Expiry
+# =========================================================================
+
+def test_csrf_token_endpoint(client):
+    """Test GET /api/auth/csrf-token returns a valid 64-char hex token."""
+    res = client.get("/api/auth/csrf-token")
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data["success"] is True
+    assert "csrf_token" in data["data"]
+    assert len(data["data"]["csrf_token"]) == 64
+
+
+def test_csrf_protection_missing_token_rejected(client):
+    """Verify state-changing POST on authenticated session without CSRF token is rejected with 403."""
+    # Register and login
+    client.post("/api/auth/register", json={
+        "username": "csrf_user",
+        "email": "csrf@example.com",
+        "password": "Password123"
+    })
+    client.post("/api/auth/login", json={
+        "username_or_email": "csrf_user",
+        "password": "Password123"
+    })
+
+    # Attempt state-changing logout WITHOUT X-CSRF-Token header
+    logout_res = client.post("/api/auth/logout")
+    assert logout_res.status_code == 403
+    err = logout_res.get_json()["error"]
+    assert err["code"] == "CSRF_ERROR"
+    assert "CSRF token missing or invalid" in err["message"]
+
+
+def test_csrf_protection_invalid_token_rejected(client):
+    """Verify state-changing POST with an invalid CSRF token is rejected with 403."""
+    client.post("/api/auth/register", json={
+        "username": "csrf_user2",
+        "email": "csrf2@example.com",
+        "password": "Password123"
+    })
+    client.post("/api/auth/login", json={
+        "username_or_email": "csrf_user2",
+        "password": "Password123"
+    })
+
+    # Attempt logout with forged/wrong CSRF token
+    logout_res = client.post("/api/auth/logout", headers={"X-CSRF-Token": "bad-forged-token-12345"})
+    assert logout_res.status_code == 403
+    assert logout_res.get_json()["error"]["code"] == "CSRF_ERROR"
+
+
+def test_csrf_protection_valid_token_accepted(client):
+    """Verify state-changing POST with valid CSRF token succeeds."""
+    client.post("/api/auth/register", json={
+        "username": "csrf_user3",
+        "email": "csrf3@example.com",
+        "password": "Password123"
+    })
+    login_res = client.post("/api/auth/login", json={
+        "username_or_email": "csrf_user3",
+        "password": "Password123"
+    })
+    csrf_token = login_res.get_json()["data"]["csrf_token"]
+
+    # Logout with valid token
+    logout_res = client.post("/api/auth/logout", headers={"X-CSRF-Token": csrf_token})
+    assert logout_res.status_code == 200
+    assert logout_res.get_json()["success"] is True
+
+
+def test_session_cookie_attributes(client):
+    """Verify session cookies use HttpOnly, SameSite, and configured Secure settings."""
+    client.post("/api/auth/register", json={
+        "username": "cookie_user",
+        "email": "cookie@example.com",
+        "password": "Password123"
+    })
+    login_res = client.post("/api/auth/login", json={
+        "username_or_email": "cookie_user",
+        "password": "Password123"
+    })
+    assert login_res.status_code == 200
+
+    set_cookie = login_res.headers.get("Set-Cookie", "")
+    assert "session=" in set_cookie
+    assert "HttpOnly" in set_cookie
+    assert "SameSite=Lax" in set_cookie
+
+
+def test_logout_invalidates_session(client):
+    """Verify that logging out fully invalidates the authenticated session."""
+    client.post("/api/auth/register", json={
+        "username": "logout_user",
+        "email": "logout@example.com",
+        "password": "Password123"
+    })
+    login_res = client.post("/api/auth/login", json={
+        "username_or_email": "logout_user",
+        "password": "Password123"
+    })
+    csrf_token = login_res.get_json()["data"]["csrf_token"]
+
+    # Verify session is authenticated
+    assert client.get("/api/auth/me").status_code == 200
+
+    # Logout
+    logout_res = client.post("/api/auth/logout", headers={"X-CSRF-Token": csrf_token})
+    assert logout_res.status_code == 200
+
+    # me endpoint must now return 401
+    me_res = client.get("/api/auth/me")
+    assert me_res.status_code == 401
+    assert me_res.get_json()["error"]["code"] == "UNAUTHENTICATED"
+
+
+def test_session_expiration_behavior(app, client):
+    """Verify that expired sessions are rejected by the authentication middleware."""
+    client.post("/api/auth/register", json={
+        "username": "expiry_user",
+        "email": "expiry@example.com",
+        "password": "Password123"
+    })
+    client.post("/api/auth/login", json={
+        "username_or_email": "expiry_user",
+        "password": "Password123"
+    })
+
+    # Verify active
+    assert client.get("/api/auth/me").status_code == 200
+
+    # Simulate expired session lifetime by setting PERMANENT_SESSION_LIFETIME to negative duration
+    app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(seconds=-1)
+
+    # Next request with expired session should be treated as unauthenticated
+    expired_res = client.get("/api/auth/me")
+    assert expired_res.status_code == 401
+    assert expired_res.get_json()["error"]["code"] == "UNAUTHENTICATED"

@@ -18,6 +18,9 @@ class Config:
     SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE", "False").lower() in ("true", "1")
     PERMANENT_SESSION_LIFETIME = 86400  # 24 hours
 
+    # CSRF Protection
+    CSRF_ENABLED = True
+
     # Upload constraints
     MAX_CONTENT_LENGTH = 10 * 1024 * 1024  # 10 MB absolute max payload
     MAX_FILE_UPLOAD_BYTES = 2 * 1024 * 1024  # 2 MB for TXT/CSV

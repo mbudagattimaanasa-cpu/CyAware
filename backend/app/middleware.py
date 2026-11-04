@@ -1,6 +1,8 @@
 import time
+import secrets
+import hmac
 from functools import wraps
-from flask import session, jsonify, g, request
+from flask import session, jsonify, g, request, current_app
 from backend.app.database import query_db
 
 # In-memory store for rate limiting / login throttling: {key: [timestamp, ...]}
@@ -35,6 +37,49 @@ def clear_failed_logins(key: str):
 def reset_all_rate_limits():
     """Clear all rate-limiting state (useful for test isolation)."""
     _failed_login_attempts.clear()
+
+
+def generate_csrf_token() -> str:
+    """Generate or retrieve a cryptographically secure CSRF token stored in the session."""
+    token = session.get("csrf_token")
+    if not token:
+        token = secrets.token_hex(32)
+        session["csrf_token"] = token
+    return token
+
+
+def validate_csrf():
+    """Validate CSRF token for cookie-authenticated state-changing requests."""
+    # Check if CSRF enforcement is globally disabled in config
+    if not current_app.config.get("CSRF_ENABLED", True):
+        return None
+
+    if request.method in ("POST", "PUT", "PATCH", "DELETE"):
+        # Apply CSRF protection strictly to authenticated sessions
+        if session.get("user_id"):
+            header_token = (
+                request.headers.get("X-CSRF-Token")
+                or request.headers.get("X-CSRFToken")
+            )
+            body_token = None
+            if request.is_json:
+                data = request.get_json(silent=True)
+                if isinstance(data, dict):
+                    body_token = data.get("csrf_token")
+
+            token = header_token or body_token
+            expected_token = session.get("csrf_token")
+
+            if not expected_token or not token or not hmac.compare_digest(str(expected_token), str(token)):
+                return jsonify({
+                    "success": False,
+                    "error": {
+                        "code": "CSRF_ERROR",
+                        "message": "CSRF token missing or invalid."
+                    }
+                }), 403
+
+    return None
 
 
 def login_required(f):

@@ -49,3 +49,4 @@ def register_commands(app):
                 (user_id,)
             )
             click.echo(f"Admin user '{username}' created successfully (ID: {user_id}).")
+

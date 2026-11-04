@@ -7,6 +7,7 @@ from backend.app.middleware import (
     check_login_rate_limit,
     record_failed_login,
     clear_failed_logins,
+    generate_csrf_token,
 )
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
@@ -195,6 +196,7 @@ def login():
     session["user_id"] = user["id"]
     session["username"] = user["username"]
     session["role"] = user["role"]
+    csrf_token = generate_csrf_token()
     session.permanent = True
 
     # Audit log
@@ -212,9 +214,22 @@ def login():
                 "username": user["username"],
                 "email": user["email"],
                 "role": user["role"]
-            }
+            },
+            "csrf_token": csrf_token
         },
         "message": "Logged in successfully."
+    }), 200
+
+
+@auth_bp.route("/csrf-token", methods=["GET"])
+def get_csrf_token():
+    """Return the CSRF token for the current session."""
+    token = generate_csrf_token()
+    return jsonify({
+        "success": True,
+        "data": {
+            "csrf_token": token
+        }
     }), 200
 
 
@@ -254,3 +269,4 @@ def get_current_user():
             }
         }
     }), 200
+

@@ -5,6 +5,7 @@ from .config import config_by_name
 from . import database
 from .routes.auth import auth_bp
 from .commands import register_commands
+from .middleware import validate_csrf
 
 
 def create_app(config_name=None):
@@ -28,6 +29,11 @@ def create_app(config_name=None):
 
     # Register API Blueprints
     app.register_blueprint(auth_bp)
+
+    # CSRF Protection for state-changing requests on authenticated sessions
+    @app.before_request
+    def check_csrf():
+        return validate_csrf()
 
     # Global Security Headers
     @app.after_request
