@@ -1,0 +1,107 @@
+import os
+from datetime import datetime, timezone
+from flask import Flask, jsonify
+from .config import config_by_name
+from . import database
+
+
+def create_app(config_name=None):
+    """Application factory for CyAware Flask backend."""
+    if config_name is None:
+        config_name = os.environ.get("FLASK_ENV", "development").lower()
+
+    app = Flask(__name__, instance_relative_config=True)
+    config_class = config_by_name.get(config_name, config_by_name["default"])
+    app.config.from_object(config_class)
+
+    # Ensure instance directory exists
+    try:
+        os.makedirs(app.instance_path, exist_ok=True)
+    except OSError:
+        pass
+
+    # Initialize database
+    database.init_app(app)
+
+    # Global Security Headers
+    @app.after_request
+    def set_security_headers(response):
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Content-Security-Policy"] = "default-src 'self'"
+        return response
+
+    # Health & Status Endpoint
+    @app.route("/api/health", methods=["GET"])
+    def health_check():
+        db_status = "connected"
+        try:
+            db = database.get_db()
+            db.execute("SELECT 1").fetchone()
+        except Exception as e:
+            db_status = f"error: {str(e)}"
+
+        return jsonify({
+            "success": True,
+            "data": {
+                "status": "healthy" if db_status == "connected" else "degraded",
+                "database": db_status,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "version": "1.0.0-stage1"
+            },
+            "message": "CyAware Backend API is operational."
+        }), 200
+
+    # Standard JSON Error Handlers
+    @app.errorhandler(400)
+    def bad_request(error):
+        return jsonify({
+            "success": False,
+            "error": {
+                "code": "BAD_REQUEST",
+                "message": getattr(error, "description", "Bad Request")
+            }
+        }), 400
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+            "success": False,
+            "error": {
+                "code": "NOT_FOUND",
+                "message": getattr(error, "description", "The requested resource was not found.")
+            }
+        }), 404
+
+    @app.errorhandler(405)
+    def method_not_allowed(error):
+        return jsonify({
+            "success": False,
+            "error": {
+                "code": "METHOD_NOT_ALLOWED",
+                "message": "The HTTP method is not allowed for this endpoint."
+            }
+        }), 405
+
+    @app.errorhandler(413)
+    def request_entity_too_large(error):
+        return jsonify({
+            "success": False,
+            "error": {
+                "code": "PAYLOAD_TOO_LARGE",
+                "message": "Uploaded content exceeds the maximum allowed limit."
+            }
+        }), 413
+
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        return jsonify({
+            "success": False,
+            "error": {
+                "code": "INTERNAL_SERVER_ERROR",
+                "message": "An internal server error occurred."
+            }
+        }), 500
+
+    return app
