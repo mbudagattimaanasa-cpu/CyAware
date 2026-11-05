@@ -73,6 +73,26 @@ def test_predict_threat(loaded_nlp_service):
     assert "safety" in res["safety_recommendation"].lower() or "authorities" in res["safety_recommendation"].lower()
 
 
+def test_predict_hate_speech(loaded_nlp_service):
+    """Verify group-targeted discriminatory attacks are flagged as Hate Speech."""
+    text = "I hate all muslims and jews, get out of our country"
+    res = loaded_nlp_service.predict(text)
+    assert res["category"] == "Hate Speech"
+    assert 0.0 <= res["confidence"] <= 1.0
+    assert "discriminatory" in res["explanation"].lower() or "identity" in res["explanation"].lower()
+    assert res["safer_rewrite"] is not None
+
+
+def test_predict_toxic_abusive_language(loaded_nlp_service):
+    """Verify general obscenity and vulgar hostility are flagged as Toxic/Abusive Language."""
+    text = "damn this fucking garbage article sucks"
+    res = loaded_nlp_service.predict(text)
+    assert res["category"] == "Toxic/Abusive Language"
+    assert 0.0 <= res["confidence"] <= 1.0
+    assert "abusive" in res["explanation"].lower() or "toxic" in res["explanation"].lower()
+    assert res["safer_rewrite"] is not None
+
+
 def test_probabilities_sum_to_one(loaded_nlp_service):
     """Verify that output probability distribution across all 5 classes sums to ~1.0."""
     text = "Why did you delete my post?"

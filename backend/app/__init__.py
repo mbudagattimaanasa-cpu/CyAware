@@ -4,6 +4,7 @@ from flask import Flask, jsonify
 from .config import config_by_name
 from . import database
 from .routes.auth import auth_bp
+from .routes.analyze import analyze_bp
 from .commands import register_commands
 from .middleware import validate_csrf
 
@@ -29,6 +30,7 @@ def create_app(config_name=None):
 
     # Register API Blueprints
     app.register_blueprint(auth_bp)
+    app.register_blueprint(analyze_bp)
 
     # CSRF Protection for state-changing requests on authenticated sessions
     @app.before_request

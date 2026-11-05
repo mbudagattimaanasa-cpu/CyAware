@@ -236,7 +236,12 @@ class NLPModelService:
             return []
 
     def predict(self, text: str) -> dict:
-        """Predict the classification category and honest probability confidence for a given text."""
+        """Predict the classification category and uncalibrated model decision score for a given text.
+        
+        Note: The returned confidence represents an uncalibrated decision probability derived from
+        Logistic Regression predict_proba with balanced class weighting, rather than a formally
+        calibrated posterior probability.
+        """
         if not self.is_loaded:
             if not self.load_model():
                 raise RuntimeError("NLP Model has not been trained or loaded yet.")
