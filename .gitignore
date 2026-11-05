@@ -1,4 +1,7 @@
-# Byte-compiled / optimized / DLL files
+# Large raw dataset files
+backend/data/raw/*.csv
+backend/data/raw/*.zip
+backend/data/raw/*.tar.gz
 __pycache__/
 *.py[codz]
 *$py.class
