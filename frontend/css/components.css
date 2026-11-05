@@ -1716,3 +1716,91 @@
   }
 }
 
+/* ==========================================================================
+   Stage 5: Admin Console Components
+   ========================================================================== */
+.badge-admin {
+  background-color: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.admin-guard-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-left: 4px solid #8b5cf6;
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.admin-nav-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+}
+
+.admin-tab {
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-text-dim);
+  font-size: 0.88rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.admin-tab:hover {
+  color: var(--color-text-main);
+  background-color: rgba(15, 23, 42, 0.6);
+  border-color: var(--color-border-subtle);
+}
+
+.admin-tab.active {
+  background-color: rgba(139, 92, 246, 0.15);
+  color: #c4b5fd;
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+.admin-tab:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.admin-tabpanel {
+  display: none;
+}
+
+.admin-tabpanel.active {
+  display: block;
+}
+
+.admin-placeholder-box {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  background-color: rgba(15, 23, 42, 0.5);
+  border: 1px dashed var(--color-border-medium);
+  border-radius: var(--radius-md);
+}
+
+.admin-placeholder-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(139, 92, 246, 0.1);
+  color: #a78bfa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+}
+

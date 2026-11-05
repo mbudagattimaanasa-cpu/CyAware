@@ -5,7 +5,7 @@
  * Centralized API client module strictly adhering to the Shared API Contract.
  * Separates network transport logic from UI controllers.
  * 
- * Confirmed Endpoints for Stage 3 & 4:
+ * Confirmed Endpoints for Stage 3, 4 & 5:
  * - POST /api/analyze/text
  * - POST /api/analyze/file
  * - POST /api/analyze/image
@@ -15,6 +15,7 @@
  * - DELETE /api/analyses/{id}
  * - GET /api/reports/{id}
  * - POST /api/feedback
+ * - GET /api/admin/dashboard
  * 
  * NOTE: Live server requests are pending backend schema finalization.
  * GET /api/analyses/{id} is NOT confirmed in the shared contract and is omitted.
@@ -34,7 +35,8 @@
       DASHBOARD: '/api/dashboard',
       ANALYSES: '/api/analyses',
       REPORT_BY_ID: (id) => `/api/reports/${encodeURIComponent(id)}`,
-      FEEDBACK: '/api/feedback'
+      FEEDBACK: '/api/feedback',
+      ADMIN_DASHBOARD: '/api/admin/dashboard'
     }
   };
 
@@ -223,6 +225,19 @@
     };
   }
 
+  /**
+   * Stage 5 Admin Dashboard Client
+   * Target: GET /api/admin/dashboard
+   */
+  async function getAdminDashboard() {
+    return {
+      endpoint: (config.ENDPOINTS && config.ENDPOINTS.ADMIN_DASHBOARD) || '/api/admin/dashboard',
+      method: 'GET',
+      status: 'PENDING_BACKEND',
+      message: 'Admin dashboard metrics pending backend schema confirmation and authorization middleware.'
+    };
+  }
+
   // Export to global window scope
   window.CyAwareAPI = Object.freeze({
     checkBackendConnection,
@@ -234,7 +249,8 @@
     getAnalysesHistory,
     deleteAnalysis,
     getReport,
-    submitFeedback
+    submitFeedback,
+    getAdminDashboard
   });
 })();
 
