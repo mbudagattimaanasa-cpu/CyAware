@@ -45,7 +45,7 @@
         <!-- Navigation Action Buttons -->
         <div class="nav-actions">
           <a href="login.html" class="btn btn-outline btn-sm">Sign In</a>
-          <a href="#taxonomy" class="btn btn-primary btn-sm">Launch Detector</a>
+          <a href="analyze-text.html" class="btn btn-primary btn-sm">Launch Detector</a>
         </div>
 
         <!-- Mobile Navigation Toggle -->
@@ -251,8 +251,8 @@
             <p class="card-body">Direct input stream for evaluating individual comments, posts, or messages in real
               time.</p>
             <div class="card-footer">
-              <span style="font-size: 0.75rem; color: var(--color-primary); font-family: var(--font-family-mono);">POST
-                /api/analyze/text</span>
+              <span style="font-size: 0.75rem; color: var(--color-primary); font-family: var(--font-family-mono);">POST /api/analyze/text</span>
+              <a href="analyze-text.html" class="btn btn-primary btn-sm">Launch</a>
             </div>
           </div>
 
@@ -269,8 +269,11 @@
             <p class="card-body">Upload chat screenshots or document transcripts for automated text extraction and
               classification.</p>
             <div class="card-footer">
-              <span style="font-size: 0.75rem; color: var(--color-primary); font-family: var(--font-family-mono);">POST
-                /api/analyze/image</span>
+              <span style="font-size: 0.75rem; color: var(--color-primary); font-family: var(--font-family-mono);">POST /api/analyze/image</span>
+              <div class="flex gap-1">
+                <a href="analyze-file.html" class="btn btn-outline btn-sm">File</a>
+                <a href="analyze-image.html" class="btn btn-primary btn-sm">OCR</a>
+              </div>
             </div>
           </div>
 
@@ -285,8 +288,8 @@
             <p class="card-body">Evaluate multi-party chat transcripts to identify escalation, repeated targeting, and
               relational patterns.</p>
             <div class="card-footer">
-              <span style="font-size: 0.75rem; color: var(--color-primary); font-family: var(--font-family-mono);">POST
-                /api/analyze/conversation</span>
+              <span style="font-size: 0.75rem; color: var(--color-primary); font-family: var(--font-family-mono);">POST /api/analyze/conversation</span>
+              <a href="analyze-conversation.html" class="btn btn-primary btn-sm">Launch</a>
             </div>
           </div>
 

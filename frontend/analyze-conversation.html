@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conversation Thread Analysis — CyAware NLP Cyberbullying Detection">
+  <title>Conversation Analysis — CyAware</title>
+
+  <!-- CyAware Design System Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/layouts.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body class="site-wrapper">
+
+  <!-- ========================================================================
+       Global Navigation Header
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Main Navigation">
+        <!-- Brand Logo -->
+        <a href="index.html" class="brand" aria-label="CyAware Home">
+          <div class="brand-icon">
+            <img src="assets/icons/cyaware-logo.svg" alt="CyAware Logo" width="32" height="32">
+          </div>
+          <span class="brand-text">CyAware</span>
+          <span class="brand-badge">NLP AI</span>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <ul class="nav-menu" role="menubar">
+          <li role="none"><a href="index.html#about" class="nav-link" role="menuitem">About</a></li>
+          <li role="none"><a href="index.html#taxonomy" class="nav-link" role="menuitem">Taxonomy</a></li>
+          <li role="none"><a href="index.html#responsible-ai" class="nav-link" role="menuitem">Responsible AI</a></li>
+          <li role="none"><a href="login.html" class="nav-link" role="menuitem">Sign In</a></li>
+          <li role="none"><a href="register.html" class="nav-link" role="menuitem">Register</a></li>
+        </ul>
+
+        <!-- Navigation Action Buttons -->
+        <div class="nav-actions">
+          <a href="login.html" class="btn btn-outline btn-sm">Sign In</a>
+          <a href="analyze-text.html" class="btn btn-primary btn-sm">Workspace</a>
+        </div>
+
+        <!-- Mobile Navigation Toggle -->
+        <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       Main Content: Conversation Analysis Interface
+       ======================================================================== -->
+  <main class="main-content analysis-page-wrapper" id="main-content">
+    <div class="container analysis-container">
+
+      <!-- Analysis Page Header -->
+      <div class="analysis-header">
+        <span class="section-tag">Stage 3 Analysis Engine</span>
+        <h1>Multi-Turn Conversation Context Analysis</h1>
+        <p>
+          Evaluate dialogue histories across multiple participants to differentiate between reciprocal banter and targeted harassment.
+        </p>
+      </div>
+
+      <!-- Core Analysis Sub-Navigation Tabs -->
+      <nav class="analysis-nav" aria-label="Analysis Modes">
+        <a href="analyze-text.html" class="analysis-tab">
+          <svg class="analysis-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          Single Text
+        </a>
+        <a href="analyze-file.html" class="analysis-tab">
+          <svg class="analysis-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+          Document File
+        </a>
+        <a href="analyze-image.html" class="analysis-tab">
+          <svg class="analysis-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+          Screenshot OCR
+        </a>
+        <a href="analyze-conversation.html" class="analysis-tab active" aria-current="page">
+          <svg class="analysis-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          Conversation Thread
+        </a>
+      </nav>
+
+      <!-- Responsible AI Alert Banner -->
+      <div class="alert alert-responsible-ai" role="region" aria-label="Responsible AI Advisory">
+        <div class="alert-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="alert-content">
+          <div class="alert-title">Context Matters: Evaluating Relational Flow</div>
+          <p style="margin: 0; font-size: 0.88rem;">
+            A single message does not prove cyberbullying. Context, repeated interaction, and power dynamics distinguish harmless teasing from targeted intimidation. Moderation outcomes should inform human discretion.
+          </p>
+        </div>
+      </div>
+
+      <!-- Main Input Card -->
+      <div class="card">
+        <div class="card-header flex justify-between items-center" style="margin-bottom: 1rem;">
+          <div>
+            <h3 class="card-title" style="margin-bottom: 0.25rem;">Conversation Thread Builder</h3>
+            <span style="font-size: 0.82rem; color: var(--color-primary); font-family: var(--font-family-mono);">Target: POST /api/analyze/conversation</span>
+          </div>
+          <div class="flex gap-1">
+            <button type="button" class="sample-btn" data-sample-convo="benign">Load Benign Chat</button>
+            <button type="button" class="sample-btn" data-sample-convo="heated">Load Heated Chat</button>
+            <button type="button" id="convo-clear-btn" class="btn btn-ghost btn-sm" title="Clear thread">Clear</button>
+          </div>
+        </div>
+
+        <!-- Format Guidance Box -->
+        <div class="convo-format-box">
+          <strong>Conversation Formatting Guidance:</strong>
+          You can add messages individually below, or paste a raw chat transcript where each line follows the format <code>SenderName: Message content</code>.
+        </div>
+
+        <!-- 1. Add Single Message Row -->
+        <div class="grid grid-cols-3 gap-2" style="margin-bottom: 1rem;">
+          <div style="grid-column: span 1;">
+            <label for="convo-sender-input" class="form-label" style="font-size: 0.82rem;">Sender Name</label>
+            <input type="text" id="convo-sender-input" class="form-control" placeholder="e.g. Alex" value="Alex">
+          </div>
+          <div style="grid-column: span 2;">
+            <label for="convo-message-input" class="form-label" style="font-size: 0.82rem;">Message Text</label>
+            <div class="flex gap-1">
+              <input type="text" id="convo-message-input" class="form-control" placeholder="Type message and click Add...">
+              <button type="button" id="convo-add-btn" class="btn btn-secondary" style="white-space: nowrap;">
+                Add Message
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Or Paste Raw Transcript (Accordion / Collapsible) -->
+        <details style="margin-bottom: 1.5rem; background: rgba(7, 13, 30, 0.4); padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--color-border-subtle);">
+          <summary style="font-size: 0.88rem; font-weight: 600; cursor: pointer; color: var(--color-text-muted);">
+            Or paste raw transcript text (Click to expand)
+          </summary>
+          <div style="margin-top: 0.75rem;">
+            <textarea id="convo-transcript-input" class="textarea-control" style="min-height: 100px; font-size: 0.9rem;" placeholder="Alex: Hey did you submit the report?&#10;Jordan: Not yet, finishing it now.&#10;Alex: Okay let me know!"></textarea>
+            <div class="flex justify-between items-center" style="margin-top: 0.5rem;">
+              <span style="font-size: 0.78rem; color: var(--color-text-dim);">One line per message formatted as <code>Speaker: Text</code></span>
+              <button type="button" id="convo-parse-transcript-btn" class="btn btn-outline btn-sm">Import Transcript</button>
+            </div>
+          </div>
+        </details>
+
+        <!-- 3. Thread Review List -->
+        <div class="flex justify-between items-center" style="margin-bottom: 0.5rem;">
+          <h4 style="font-size: 0.95rem; font-weight: 700;">Thread Review</h4>
+          <span id="convo-count-badge" class="badge" style="background: rgba(2, 132, 199, 0.15); color: #38bdf8; border-color: rgba(2, 132, 199, 0.3);">
+            0 Messages
+          </span>
+        </div>
+
+        <form id="convo-analysis-form" novalidate>
+          <div id="convo-preview-list" class="convo-preview-list">
+            <!-- Messages populated dynamically -->
+          </div>
+
+          <div id="convo-error-feedback" class="invalid-feedback" style="display: none; margin-top: 1rem;"></div>
+
+          <!-- Action Buttons -->
+          <div class="flex justify-between items-center" style="margin-top: 1.5rem;">
+            <a href="analyze-text.html" class="btn btn-outline btn-sm">Switch to Text</a>
+            <button type="submit" id="submit-convo-btn" class="btn btn-primary btn-lg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Analyze Conversation Thread
+            </button>
+          </div>
+        </form>
+
+        <!-- Demonstration Result Status Card -->
+        <div id="convo-analysis-status" style="display: none;"></div>
+      </div>
+
+      <!-- Process Explanation Information -->
+      <div class="process-info-grid">
+        <div class="process-step-card">
+          <div class="process-step-num">1</div>
+          <div class="process-step-title">Speaker Attribution</div>
+          <div class="process-step-desc">
+            The dialogue parser segments turns, tracks speaker identities, and establishes sequential chronology.
+          </div>
+        </div>
+        <div class="process-step-card">
+          <div class="process-step-num">2</div>
+          <div class="process-step-title">Multi-Turn Context Model</div>
+          <div class="process-step-desc">
+            Evaluates contextual reciprocity, escalation, and persistence across conversation turns.
+          </div>
+        </div>
+        <div class="process-step-card">
+          <div class="process-step-num">3</div>
+          <div class="process-step-title">Contextual Verdict</div>
+          <div class="process-step-desc">
+            Assesses the dialogue against agreed categories (Normal, Insult, Threat, Hate Speech, Toxic Language).
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       Global Footer
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+        <div>
+          &copy; 2026 CyAware Project. NLP-Based Cyberbullying Detection Platform.
+        </div>
+        <div>
+          <a href="index.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">Home</a>
+          <a href="login.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">Sign In</a>
+          Branch: <code style="color: var(--color-primary);">frontend</code>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/analysis.js"></script>
+</body>
+</html>
+
