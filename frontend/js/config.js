@@ -25,7 +25,6 @@ const CyAwareConfig = Object.freeze({
 
     // History & Reports
     ANALYSES: '/api/analyses',
-    ANALYSIS_BY_ID: (id) => `/api/analyses/${encodeURIComponent(id)}`,
     REPORT_BY_ID: (id) => `/api/reports/${encodeURIComponent(id)}`,
 
     // Dashboards & Feedback
