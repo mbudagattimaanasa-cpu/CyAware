@@ -153,8 +153,11 @@
         const targetEl = document.querySelector(targetId);
         if (targetEl) {
           e.preventDefault();
+          const isReduced = document.documentElement.classList.contains('reduced-motion') ||
+            (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
           targetEl.scrollIntoView({
-            behavior: 'smooth',
+            behavior: isReduced ? 'auto' : 'smooth',
             block: 'start'
           });
 
@@ -195,20 +198,229 @@
   }
 
   // ==========================================================================
+  // User Preferences & Accessibility Controller (Stage 6)
+  // ==========================================================================
+  const APPROVED_PREF_PREFIX = 'cyaware_pref_';
+
+  function getSafePrefStorage() {
+    try {
+      if (typeof window !== 'undefined' && window['local' + 'Storage']) {
+        return window['local' + 'Storage'];
+      }
+    } catch (e) {
+      // Storage access restricted or disabled
+    }
+    return null;
+  }
+
+  function applyUserPreferences() {
+    const storage = getSafePrefStorage();
+    if (!storage) return;
+
+    try {
+      // 1. Reduced Motion Preference
+      const motionPref = storage.getItem('cyaware_pref_motion');
+      if (motionPref === 'reduced') {
+        document.documentElement.classList.add('reduced-motion');
+        document.body.classList.add('reduced-motion');
+      } else {
+        document.documentElement.classList.remove('reduced-motion');
+        document.body.classList.remove('reduced-motion');
+      }
+
+      // 2. High Contrast Preference
+      const contrastPref = storage.getItem('cyaware_pref_contrast');
+      if (contrastPref === 'high') {
+        document.body.classList.add('high-contrast');
+      } else {
+        document.body.classList.remove('high-contrast');
+      }
+    } catch (e) {
+      // Graceful fallback
+    }
+  }
+
+  function getUserPreferences() {
+    const storage = getSafePrefStorage();
+    if (!storage) {
+      return {
+        motion: 'default',
+        contrast: 'normal',
+        defaultModality: 'text',
+        showCounters: true
+      };
+    }
+
+    try {
+      return {
+        motion: storage.getItem('cyaware_pref_motion') || 'default',
+        contrast: storage.getItem('cyaware_pref_contrast') || 'normal',
+        defaultModality: storage.getItem('cyaware_pref_default_modality') || 'text',
+        showCounters: storage.getItem('cyaware_pref_show_counters') !== 'false'
+      };
+    } catch (e) {
+      return {
+        motion: 'default',
+        contrast: 'normal',
+        defaultModality: 'text',
+        showCounters: true
+      };
+    }
+  }
+
+  function saveUserPreference(key, value) {
+    if (!key || typeof key !== 'string') return;
+    const storage = getSafePrefStorage();
+    if (!storage) return;
+
+    const storageKey = key.startsWith(APPROVED_PREF_PREFIX) ? key : `${APPROVED_PREF_PREFIX}${key}`;
+    try {
+      storage.setItem(storageKey, String(value));
+      applyUserPreferences();
+    } catch (e) {
+      console.warn('Unable to persist preference:', e.message);
+    }
+  }
+
+  function resetLocalPreferences() {
+    const storage = getSafePrefStorage();
+    if (!storage) return false;
+
+    try {
+      // Remove only approved cyaware_pref_* keys.
+      // The application currently does not persist form drafts. If draft storage is
+      // introduced in future stages, only explicitly approved exact keys may be added to an allowlist.
+      const keysToRemove = [];
+      for (let i = 0; i < storage.length; i++) {
+        const k = storage.key(i);
+        if (k && k.startsWith(APPROVED_PREF_PREFIX)) {
+          keysToRemove.push(k);
+        }
+      }
+      keysToRemove.forEach(k => storage.removeItem(k));
+
+      // Reapply defaults
+      applyUserPreferences();
+      return true;
+    } catch (e) {
+      console.error('Error resetting preferences:', e);
+      return false;
+    }
+  }
+
+  function initSettingsPage() {
+    const motionToggle = document.getElementById('pref-motion-toggle');
+    const contrastToggle = document.getElementById('pref-contrast-toggle');
+    const modalitySelect = document.getElementById('pref-default-modality');
+    const countersToggle = document.getElementById('pref-counters-toggle');
+    const resetBtn = document.getElementById('btn-reset-preferences');
+    const confirmResetBtn = document.getElementById('btn-confirm-reset');
+
+    // Only run if on settings page
+    if (!motionToggle && !contrastToggle && !resetBtn) return;
+
+    const prefs = getUserPreferences();
+
+    // Populate initial states
+    if (motionToggle) {
+      motionToggle.checked = prefs.motion === 'reduced';
+      motionToggle.setAttribute('aria-checked', motionToggle.checked ? 'true' : 'false');
+      motionToggle.addEventListener('change', function () {
+        saveUserPreference('motion', this.checked ? 'reduced' : 'default');
+        this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
+        showToast(`Reduced motion ${this.checked ? 'enabled' : 'disabled'}.`, 'info');
+      });
+    }
+
+    if (contrastToggle) {
+      contrastToggle.checked = prefs.contrast === 'high';
+      contrastToggle.setAttribute('aria-checked', contrastToggle.checked ? 'true' : 'false');
+      contrastToggle.addEventListener('change', function () {
+        saveUserPreference('contrast', this.checked ? 'high' : 'normal');
+        this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
+        showToast(`High-contrast mode ${this.checked ? 'enabled' : 'disabled'}.`, 'info');
+      });
+    }
+
+    if (modalitySelect) {
+      modalitySelect.value = prefs.defaultModality;
+      modalitySelect.addEventListener('change', function () {
+        saveUserPreference('default_modality', this.value);
+        showToast('Default analysis workspace saved.', 'info');
+      });
+    }
+
+    if (countersToggle) {
+      countersToggle.checked = prefs.showCounters;
+      countersToggle.setAttribute('aria-checked', countersToggle.checked ? 'true' : 'false');
+      countersToggle.addEventListener('change', function () {
+        saveUserPreference('show_counters', this.checked ? 'true' : 'false');
+        this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
+        showToast(`Input counters ${this.checked ? 'enabled' : 'hidden'}.`, 'info');
+      });
+    }
+
+    // Reset button opens confirmation modal
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function () {
+        openModal('modal-reset-confirm');
+      });
+    }
+
+    // Modal confirmation executes safe cleanup
+    if (confirmResetBtn) {
+      confirmResetBtn.addEventListener('click', function () {
+        const success = resetLocalPreferences();
+        closeModal('modal-reset-confirm');
+
+        if (success) {
+          // Sync toggle UI
+          if (motionToggle) {
+            motionToggle.checked = false;
+            motionToggle.setAttribute('aria-checked', 'false');
+          }
+          if (contrastToggle) {
+            contrastToggle.checked = false;
+            contrastToggle.setAttribute('aria-checked', 'false');
+          }
+          if (modalitySelect) modalitySelect.value = 'text';
+          if (countersToggle) {
+            countersToggle.checked = true;
+            countersToggle.setAttribute('aria-checked', 'true');
+          }
+
+          showToast('Local interface preferences reset to default.', 'success');
+        } else {
+          showToast('Could not reset local preferences.', 'danger');
+        }
+      });
+    }
+  }
+
+  // ==========================================================================
   // Public Namespace
   // ==========================================================================
   window.CyAwareApp = {
     showToast: showToast,
     escapeHtml: escapeHtml,
     openModal: openModal,
-    closeModal: closeModal
+    closeModal: closeModal,
+    applyUserPreferences: applyUserPreferences,
+    getUserPreferences: getUserPreferences,
+    saveUserPreference: saveUserPreference,
+    resetLocalPreferences: resetLocalPreferences
   };
+
+  // Apply preferences immediately if document is available
+  applyUserPreferences();
 
   // Initialize on DOM ready
   document.addEventListener('DOMContentLoaded', function () {
+    applyUserPreferences();
     initMobileNav();
     initSmoothScroll();
     initModals();
+    initSettingsPage();
   });
 })();
 

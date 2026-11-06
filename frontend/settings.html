@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Settings &amp; Preferences — CyAware</title>
+  <meta name="description" content="Manage local interface preferences, accessibility options, and view account administration boundaries in CyAware.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/layouts.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+  <!-- ========================================================================
+       Global Navigation Header
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container header-container">
+      <div class="brand-group">
+        <a href="index.html" class="nav-brand" aria-label="CyAware Home">
+          <img src="assets/icons/cyaware-logo.svg" alt="CyAware Brand Emblem" width="32" height="32" class="brand-logo">
+          <span class="brand-text">CyAware</span>
+        </a>
+        <span class="badge badge-outline" style="font-size: 0.75rem;">Stage 6</span>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="desktop-nav" aria-label="Main Navigation">
+        <ul class="nav-menu" role="menubar">
+          <li role="none"><a href="index.html" class="nav-link" role="menuitem">Home</a></li>
+          <li role="none"><a href="dashboard.html" class="nav-link" role="menuitem">Dashboard</a></li>
+          <li role="none"><a href="analyze-text.html" class="nav-link" role="menuitem">Workspace</a></li>
+          <li role="none"><a href="history.html" class="nav-link" role="menuitem">History</a></li>
+          <li role="none"><a href="settings.html" class="nav-link active" role="menuitem" aria-current="page">Settings</a></li>
+          <li role="none"><a href="login.html" class="nav-link" role="menuitem">Sign In</a></li>
+        </ul>
+      </nav>
+
+      <!-- Quick Actions -->
+      <div class="header-actions">
+        <a href="dashboard.html" class="btn btn-outline btn-sm">Dashboard</a>
+        <a href="analyze-text.html" class="btn btn-primary btn-sm">New Analysis</a>
+        <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" style="display: none;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       Main Content Container
+       ======================================================================== -->
+  <main class="main-content">
+    <div class="container" style="max-width: 920px;">
+
+      <!-- Page Header -->
+      <div style="margin-bottom: 2.5rem;">
+        <div class="flex items-center gap-2" style="margin-bottom: 0.5rem;">
+          <span class="badge badge-info">Interface Preferences</span>
+          <span class="badge" style="background: rgba(148, 163, 184, 0.1); color: var(--color-text-dim);">Client-Side Storage</span>
+        </div>
+        <h1 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.02em;">
+          User Settings &amp; Preferences
+        </h1>
+        <p style="font-size: 1.05rem; color: var(--color-text-muted); max-width: 720px; margin: 0;">
+          Configure local interface preferences, accessibility options, and review account administration boundaries.
+        </p>
+      </div>
+
+      <!-- Section 1: Accessibility & Display Preferences -->
+      <section class="settings-section" aria-labelledby="heading-accessibility">
+        <h2 id="heading-accessibility" style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--color-text-main);">
+          Interface &amp; Accessibility Preferences
+        </h2>
+
+        <div class="settings-card">
+          <!-- Row 1: Reduced Motion -->
+          <div class="settings-row">
+            <div class="settings-info">
+              <div class="settings-label">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                Reduced Motion
+              </div>
+              <p class="settings-desc">
+                Minimizes non-essential animations, transitions, and smooth scrolling across all CyAware pages for users with vestibular or motion sensitivities.
+              </p>
+            </div>
+            <label class="switch-control">
+              <input type="checkbox" id="pref-motion-toggle" role="switch" aria-checked="false" aria-label="Toggle reduced motion">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <!-- Row 2: High Contrast -->
+          <div class="settings-row">
+            <div class="settings-info">
+              <div class="settings-label">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20a10 10 0 0 0 0-20z"/></svg>
+                High-Contrast Mode
+              </div>
+              <p class="settings-desc">
+                Enhances text brightness and border contrast ratios across cards and buttons for improved visual clarity and legibility.
+              </p>
+            </div>
+            <label class="switch-control">
+              <input type="checkbox" id="pref-contrast-toggle" role="switch" aria-checked="false" aria-label="Toggle high contrast mode">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <!-- Row 3: Default Analysis Modality -->
+          <div class="settings-row">
+            <div class="settings-info">
+              <div class="settings-label">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Default Analysis Workspace
+              </div>
+              <p class="settings-desc">
+                Select which detection interface launches by default from the quick analysis actions.
+              </p>
+            </div>
+            <select id="pref-default-modality" class="form-control" style="width: auto; min-width: 220px;" aria-label="Default analysis workspace">
+              <option value="text">Text Analysis</option>
+              <option value="file">Document File Upload</option>
+              <option value="image">Screenshot OCR</option>
+              <option value="conversation">Conversation Dialogue</option>
+            </select>
+          </div>
+
+          <!-- Row 4: Input Counters -->
+          <div class="settings-row">
+            <div class="settings-info">
+              <div class="settings-label">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+                Show Character &amp; Word Counters
+              </div>
+              <p class="settings-desc">
+                Displays live character and word counters in the text analysis workspace to help stay within recommended model token limits.
+              </p>
+            </div>
+            <label class="switch-control">
+              <input type="checkbox" id="pref-counters-toggle" role="switch" aria-checked="true" aria-label="Toggle input counters">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Local Preference Reset & Storage Boundary -->
+      <section class="settings-section" aria-labelledby="heading-storage">
+        <h2 id="heading-storage" style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--color-text-main);">
+          Local Preference Reset &amp; Storage Boundary
+        </h2>
+
+        <div class="settings-card">
+          <div class="alert alert-info" style="margin-bottom: 1.25rem;">
+            <div class="alert-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </div>
+            <div class="alert-content">
+              <div class="alert-title">Responsible Data Notice</div>
+              <p style="margin: 0; font-size: 0.88rem; line-height: 1.5;">
+                CyAware stores only harmless UI display preferences in your browser's local storage (keys prefixed with <code>cyaware_pref_*</code>). This reset utility clears only approved local preferences and temporary form drafts. It <strong>never</strong> deletes analyses, audit logs, reports, or account records on the backend server.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between" style="flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <div style="font-weight: 600; color: var(--color-text-main); margin-bottom: 0.25rem;">
+                Reset Local Interface Preferences
+              </div>
+              <p style="font-size: 0.85rem; color: var(--color-text-dim); margin: 0;">
+                Restore default motion, contrast, and modality settings in this browser.
+              </p>
+            </div>
+            <button type="button" id="btn-reset-preferences" class="btn btn-outline btn-sm">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              Reset Local Preferences
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: User Account & Authentication (Pending Backend) -->
+      <section class="settings-section" aria-labelledby="heading-account">
+        <div class="flex items-center justify-between" style="margin-bottom: 1rem;">
+          <h2 id="heading-account" style="font-size: 1.25rem; font-weight: 700; margin: 0; color: var(--color-text-main);">
+            User Account &amp; Authentication
+          </h2>
+          <span class="badge" style="background: rgba(148, 163, 184, 0.1); color: var(--color-text-dim);">
+            Pending Backend Account API
+          </span>
+        </div>
+
+        <div class="settings-card" style="background: rgba(15, 23, 42, 0.5); border: 1px dashed var(--color-border-medium);">
+          <div style="margin-bottom: 1.5rem;">
+            <p style="font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.6; margin-bottom: 1rem;">
+              Account-management operations (such as changing email addresses, updating passwords, or role permission assignment) require backend authentication endpoints not defined in the current Shared API Contract. In strict compliance with project rules, no speculative account mutation requests are made.
+            </p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+            <div>
+              <label for="disabled-account-email" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dim); margin-bottom: 0.35rem;">
+                Email Address
+              </label>
+              <input type="text" id="disabled-account-email" class="form-control" value="Pending Backend User Profile" disabled style="opacity: 0.6; cursor: not-allowed;">
+            </div>
+            <div>
+              <label for="disabled-account-role" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dim); margin-bottom: 0.35rem;">
+                Assigned Role
+              </label>
+              <input type="text" id="disabled-account-role" class="form-control" value="Pending Backend Confirmation" disabled style="opacity: 0.6; cursor: not-allowed;">
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button type="button" class="btn btn-outline btn-sm" disabled style="opacity: 0.5; cursor: not-allowed;">
+              Change Password
+            </button>
+            <span style="font-size: 0.8rem; color: var(--color-text-dim);">
+              Requires backend authentication service integration.
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Responsible AI Governance Section -->
+      <div class="card" style="margin-top: 2rem; padding: 1.75rem; border-left: 4px solid var(--color-primary);">
+        <div class="flex items-center gap-2" style="margin-bottom: 0.75rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <h3 style="font-size: 1.05rem; font-weight: 700; margin: 0; color: var(--color-primary);">
+            Responsible AI &amp; Ethical Governance Charter
+          </h3>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--color-text-main); margin-bottom: 0.5rem; line-height: 1.6;">
+          CyAware operates as an assistive intelligence layer. Language requires context: a single detected phrase does not constitute definitive proof of cyberbullying without comprehensive human review.
+        </p>
+        <p style="font-size: 0.85rem; color: var(--color-text-dim); margin: 0; line-height: 1.5;">
+          Automated punitive or blocking actions are strictly avoided. All classification outputs are advisory signals intended for educators, moderators, and human investigators.
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       Reset Confirmation Modal Dialog
+       ======================================================================== -->
+  <div id="modal-reset-confirm" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-reset-title" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 id="modal-reset-title" class="modal-title" style="color: var(--color-text-main); display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Confirm Preference Reset
+        </h3>
+        <button type="button" class="modal-close" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--color-text-main); margin-bottom: 0.75rem;">
+          Are you sure you want to reset your local interface preferences? This will restore default motion, contrast, and workspace settings in your browser.
+        </p>
+        <div class="alert alert-warning" style="margin: 0; padding: 0.75rem 1rem;">
+          <div style="font-size: 0.85rem; line-height: 1.5;">
+            <strong>Important:</strong> This only affects local browser preferences. It does <strong>not</strong> delete analyses, audit records, or reports on the backend server.
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline btn-sm modal-close">Cancel</button>
+        <button type="button" id="btn-confirm-reset" class="btn btn-danger btn-sm">Confirm Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       Global Footer
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+        <div>
+          &copy; 2026 CyAware Project. NLP-Based Cyberbullying Detection Platform.
+        </div>
+        <div>
+          <a href="index.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">Home</a>
+          <a href="dashboard.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">Dashboard</a>
+          <a href="history.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">History</a>
+          <a href="login.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">Sign In</a>
+          Branch: <code style="color: var(--color-primary);">frontend</code>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
+
