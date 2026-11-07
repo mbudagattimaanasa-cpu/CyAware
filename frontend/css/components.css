@@ -1988,3 +1988,259 @@ body.high-contrast .card {
   gap: 1rem;
 }
 
+/* ==========================================================================
+   Stage 7: Awareness, Safety & FAQ Components
+   ========================================================================== */
+
+/* Quick-Jump Section Navigation */
+.jump-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.jump-pill {
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-pill);
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-text-dim);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.jump-pill:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background: rgba(0, 210, 255, 0.08);
+}
+
+.jump-pill:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* FAQ Accordion Component (<details> / <summary>) */
+.faq-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 2.5rem;
+}
+
+.faq-item {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.faq-item[open] {
+  border-color: var(--color-border-medium);
+}
+
+.faq-item summary {
+  padding: 1.15rem 1.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-text-main);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  user-select: none;
+  transition: background-color var(--transition-fast);
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--color-text-dim);
+  border-bottom: 2px solid var(--color-text-dim);
+  transform: rotate(45deg);
+  transition: transform var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.faq-item[open] summary::after {
+  transform: rotate(-135deg);
+  border-color: var(--color-primary);
+}
+
+.faq-item summary:hover {
+  background-color: rgba(15, 23, 42, 0.5);
+  color: var(--color-primary);
+}
+
+.faq-item summary:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.faq-item[open] summary {
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.faq-answer {
+  padding: 1.25rem 1.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  background-color: rgba(15, 23, 42, 0.3);
+}
+
+.faq-answer p {
+  margin-bottom: 0.75rem;
+}
+
+.faq-answer p:last-child {
+  margin-bottom: 0;
+}
+
+.faq-answer ul {
+  margin: 0.5rem 0 0.75rem 1.25rem;
+}
+
+.faq-answer li {
+  margin-bottom: 0.35rem;
+}
+
+/* Regional Support Directory Components */
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.resource-card {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.resource-card:hover {
+  border-color: var(--color-border-medium);
+  transform: translateY(-2px);
+}
+
+html.reduced-motion .resource-card:hover,
+body.reduced-motion .resource-card:hover {
+  transform: none !important;
+}
+
+.resource-card-india {
+  border-left: 4px solid var(--color-primary);
+  background: linear-gradient(135deg, rgba(0, 210, 255, 0.04) 0%, rgba(15, 23, 42, 0.8) 100%);
+}
+
+.resource-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+  margin-bottom: 0.35rem;
+}
+
+.resource-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.75rem;
+}
+
+.resource-tag-emergency {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.resource-tag-portal {
+  background: rgba(0, 210, 255, 0.15);
+  color: var(--color-primary);
+  border: 1px solid rgba(0, 210, 255, 0.35);
+}
+
+.resource-tag-fraud {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.resource-tag-mental-health {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.resource-tag-support {
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.35);
+}
+
+.resource-contact {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+  margin-bottom: 0.5rem;
+  font-family: var(--font-family-mono);
+}
+
+.resource-desc {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  margin-bottom: 1rem;
+}
+
+.resource-clarification {
+  font-size: 0.8rem;
+  color: var(--color-text-dim);
+  background: rgba(15, 23, 42, 0.6);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border-left: 2px solid var(--color-border-medium);
+  margin-bottom: 1rem;
+  line-height: 1.45;
+}
+
+.resource-action-link {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.resource-action-link:hover {
+  text-decoration: underline;
+}
+
