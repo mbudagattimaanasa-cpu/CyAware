@@ -1,0 +1,186 @@
+/**
+ * CyAware — Frontend Design System
+ * File: frontend/css/main.css
+ * Visual Identity: Modern Cybersecurity Palette (Deep Navy, Midnight Cyan, Slate)
+ */
+
+:root {
+  /* ==========================================================================
+     Color Palette — Cybersecurity & Trust
+     ========================================================================== */
+  --color-bg-base: #070d1e;
+  --color-bg-surface: #0f172a;
+  --color-bg-card: #1e293b;
+  --color-bg-elevated: #27354a;
+  --color-bg-glass: rgba(15, 23, 42, 0.75);
+
+  /* Primary Brand Accents */
+  --color-primary: #00d2ff;
+  --color-primary-glow: rgba(0, 210, 255, 0.25);
+  --color-primary-hover: #38bdf8;
+  --color-primary-dark: #0284c7;
+
+  /* Secondary Accents */
+  --color-secondary: #6366f1;
+  --color-secondary-hover: #818cf8;
+  --color-teal: #14b8a6;
+
+  /* Typography / Text Colors */
+  --color-text-main: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-text-dim: #64748b;
+  --color-text-inverse: #070d1e;
+
+  /* Borders & Dividers */
+  --color-border-subtle: rgba(148, 163, 184, 0.12);
+  --color-border-medium: rgba(148, 163, 184, 0.24);
+  --color-border-glow: rgba(0, 210, 255, 0.4);
+
+  /* ==========================================================================
+     Agreed Product Categories Palette
+     ========================================================================== */
+  --cat-normal: #10b981;
+  --cat-normal-bg: rgba(16, 185, 129, 0.12);
+  --cat-normal-border: rgba(16, 185, 129, 0.35);
+
+  --cat-insult: #f59e0b;
+  --cat-insult-bg: rgba(245, 158, 11, 0.12);
+  --cat-insult-border: rgba(245, 158, 11, 0.35);
+
+  --cat-threat: #ef4444;
+  --cat-threat-bg: rgba(239, 68, 68, 0.12);
+  --cat-threat-border: rgba(239, 68, 68, 0.35);
+
+  --cat-hate: #a855f7;
+  --cat-hate-bg: rgba(168, 85, 247, 0.12);
+  --cat-hate-border: rgba(168, 85, 247, 0.35);
+
+  --cat-toxic: #f97316;
+  --cat-toxic-bg: rgba(249, 115, 22, 0.12);
+  --cat-toxic-border: rgba(249, 115, 22, 0.35);
+
+  /* ==========================================================================
+     Alert & Notification Tokens
+     ========================================================================== */
+  --alert-info-bg: rgba(2, 132, 199, 0.12);
+  --alert-info-border: rgba(2, 132, 199, 0.35);
+  --alert-info-text: #38bdf8;
+
+  --alert-warning-bg: rgba(217, 119, 6, 0.12);
+  --alert-warning-border: rgba(217, 119, 6, 0.35);
+  --alert-warning-text: #fbbf24;
+
+  --alert-danger-bg: rgba(220, 38, 38, 0.12);
+  --alert-danger-border: rgba(220, 38, 38, 0.35);
+  --alert-danger-text: #f87171;
+
+  --alert-success-bg: rgba(5, 150, 105, 0.12);
+  --alert-success-border: rgba(5, 150, 105, 0.35);
+  --alert-success-text: #34d399;
+
+  /* ==========================================================================
+     Layout & Geometry Tokens
+     ========================================================================== */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+  --shadow-glow: 0 0 24px rgba(0, 210, 255, 0.2);
+
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 400ms ease;
+}
+
+/* ==========================================================================
+   CSS Reset & Base Rules
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-bg-base);
+  color: var(--color-text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 15% 10%, rgba(0, 210, 255, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
+  background-attachment: fixed;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-main);
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: 2.75rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.4rem; }
+h4 { font-size: 1.15rem; }
+
+p {
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+img, svg {
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+code, kbd, samp, pre {
+  font-family: var(--font-family-mono);
+  font-size: 0.9em;
+}
+
+/* Accessible Screen Reader Helper */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+

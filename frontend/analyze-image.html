@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Screenshot OCR Analysis — CyAware NLP Cyberbullying Detection">
+  <title>Screenshot OCR Analysis — CyAware</title>
+
+  <!-- CyAware Design System Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/layouts.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body class="site-wrapper">
+
+  <!-- ========================================================================
+       Global Navigation Header
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Main Navigation">
+        <!-- Brand Logo -->
+        <a href="index.html" class="brand" aria-label="CyAware Home">
+          <div class="brand-icon">
+            <img src="assets/icons/cyaware-logo.svg" alt="CyAware Logo" width="32" height="32">
+          </div>
+          <span class="brand-text">CyAware</span>
+          <span class="brand-badge">NLP AI</span>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <ul class="nav-menu" role="menubar">
+          <li role="none"><a href="index.html" class="nav-link" role="menuitem">Home</a></li>
+          <li role="none"><a href="dashboard.html" class="nav-link" role="menuitem">Dashboard</a></li>
+          <li role="none"><a href="analyze-text.html" class="nav-link active" role="menuitem" aria-current="page">Workspace</a></li>
+          <li role="none"><a href="history.html" class="nav-link" role="menuitem">History</a></li>
+          <li role="none"><a href="login.html" class="nav-link" role="menuitem">Sign In</a></li>
+          <li role="none"><a href="register.html" class="nav-link" role="menuitem">Register</a></li>
+        </ul>
+
+        <!-- Navigation Action Buttons -->
+        <div class="nav-actions">
+          <a href="login.html" class="btn btn-outline btn-sm">Sign In</a>
+          <a href="analyze-text.html" class="btn btn-primary btn-sm">Workspace</a>
+        </div>
+
+        <!-- Mobile Navigation Toggle -->
+        <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       Main Content: Image OCR Analysis Interface
+       ======================================================================== -->
+  <main class="main-content analysis-page-wrapper" id="main-content">
+    <div class="container analysis-container">
+
+      <!-- Analysis Page Header -->
+      <div class="analysis-header">
+        <span class="section-tag">Stage 3 Analysis Engine</span>
+        <h1>Chat Screenshot OCR Analysis</h1>
+        <p>
+          Upload digital screenshots from messaging apps or social platforms for backend OCR text extraction and evaluation.
+        </p>
+      </div>
+
+      <!-- Core Analysis Sub-Navigation Tabs -->
+      <nav class="analysis-nav" aria-label="Analysis Modes">
+        <a href="analyze-text.html" class="analysis-tab">
+          <svg class="analysis-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          Single Text
+        </a>
+        <a href="analyze-file.html" class="analysis-tab">
+          <svg class="analysis-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+          Document File
+        </a>
+        <a href="analyze-image.html" class="analysis-tab active" aria-current="page">
+          <svg class="analysis-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+          Screenshot OCR
+        </a>
+        <a href="analyze-conversation.html" class="analysis-tab">
+          <svg class="analysis-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          Conversation Thread
+        </a>
+      </nav>
+
+      <!-- Responsible AI Alert Banner -->
+      <div class="alert alert-responsible-ai" role="region" aria-label="Responsible AI Advisory">
+        <div class="alert-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="alert-content">
+          <div class="alert-title">Responsible OCR Interpretation</div>
+          <p style="margin: 0; font-size: 0.88rem;">
+            A single message does not automatically prove cyberbullying. Context matters when interpreting extracted text from screenshots. Automated classifications serve to assist human review, not enforce automated punishment.
+          </p>
+        </div>
+      </div>
+
+      <!-- Main Upload Card -->
+      <div class="card">
+        <div class="card-header flex justify-between items-center" style="margin-bottom: 1rem;">
+          <div>
+            <h3 class="card-title" style="margin-bottom: 0.25rem;">Chat Screenshot Upload</h3>
+            <span style="font-size: 0.82rem; color: var(--color-primary); font-family: var(--font-family-mono);">Target: POST /api/analyze/image</span>
+          </div>
+        </div>
+
+        <form id="image-analysis-form" novalidate>
+          <!-- Drag & Drop Zone -->
+          <div class="dropzone" id="image-dropzone">
+            <input type="file" id="image-input" class="dropzone-input" accept="image/png, image/jpeg, image/webp" aria-label="Upload chat screenshot image">
+            <div class="dropzone-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            </div>
+            <div class="dropzone-title">Drag &amp; drop chat screenshot here, or click to browse</div>
+            <div class="dropzone-hint">Standard image formats are accepted for local preview. Final supported backend formats and upload size limits are subject to backend confirmation.</div>
+          </div>
+
+          <!-- Image Preview Container (Hidden until image selected) -->
+          <div id="image-preview-container" class="image-preview-container" style="display: none;">
+            <div class="image-preview-box">
+              <img id="image-preview-img" class="image-preview-img" alt="Screenshot preview">
+            </div>
+            <div class="flex justify-between items-center" style="padding: 0.5rem 0.25rem;">
+              <div style="text-align: left;">
+                <div id="image-name" style="font-weight: 600; font-size: 0.95rem;">screenshot.png</div>
+                <div id="image-size" style="font-size: 0.8rem; color: var(--color-text-dim);">0.0 KB</div>
+              </div>
+              <button type="button" id="image-remove-btn" class="file-remove-btn" aria-label="Remove image">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                Replace / Remove
+              </button>
+            </div>
+          </div>
+
+          <div id="image-error-feedback" class="invalid-feedback" style="display: none; margin-top: 1rem;"></div>
+
+          <!-- Action Buttons -->
+          <div class="flex justify-between items-center" style="margin-top: 1.5rem;">
+            <a href="analyze-text.html" class="btn btn-outline btn-sm">Switch to Text</a>
+            <button type="submit" id="submit-image-btn" class="btn btn-primary btn-lg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Analyze Screenshot OCR
+            </button>
+          </div>
+        </form>
+
+        <!-- Demonstration Result Status Card -->
+        <div id="image-analysis-status" style="display: none;"></div>
+      </div>
+
+      <!-- Process Explanation Information -->
+      <div class="process-info-grid">
+        <div class="process-step-card">
+          <div class="process-step-num">1</div>
+          <div class="process-step-title">Image Ingestion</div>
+          <div class="process-step-desc">
+            Raw screenshot image uploads to backend endpoint <code>POST /api/analyze/image</code>.
+          </div>
+        </div>
+        <div class="process-step-card">
+          <div class="process-step-num">2</div>
+          <div class="process-step-title">Backend OCR Engine</div>
+          <div class="process-step-desc">
+            Server-side OCR detects text regions, bounding boxes, and reconstructs dialog lines.
+          </div>
+        </div>
+        <div class="process-step-card">
+          <div class="process-step-num">3</div>
+          <div class="process-step-title">NLP Safety Evaluation</div>
+          <div class="process-step-desc">
+            Extracted text is classified against Normal, Insult, Threat, Hate Speech, and Toxic language.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       Global Footer
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+        <div>
+          &copy; 2026 CyAware Project. NLP-Based Cyberbullying Detection Platform.
+        </div>
+        <div>
+          <a href="index.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">Home</a>
+          <a href="dashboard.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">Dashboard</a>
+          <a href="history.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">History</a>
+          <a href="login.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">Sign In</a>
+          Branch: <code style="color: var(--color-primary);">frontend</code>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/analysis.js"></script>
+</body>
+</html>

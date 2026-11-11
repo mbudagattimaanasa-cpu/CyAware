@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CyAware Analysis Results & Assessment — Review classification outcomes, inspect conversational context, and export audit reports.">
+  <title>CyAware — Analysis Results &amp; Assessment</title>
+
+  <!-- CyAware Design System Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/layouts.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+  <!-- ========================================================================
+       Global Navigation Header
+       ======================================================================== -->
+  <header class="site-header" role="banner">
+    <div class="container">
+      <nav class="navbar" aria-label="Main Navigation">
+        <!-- Brand / Logo -->
+        <a href="index.html" class="nav-brand" aria-label="CyAware Home">
+          <img src="assets/icons/cyaware-logo.svg" alt="" width="32" height="32" class="brand-logo" aria-hidden="true">
+          <span class="brand-name">Cy<span>Aware</span></span>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <ul class="nav-menu" role="menubar">
+          <li role="none"><a href="index.html" class="nav-link" role="menuitem">Home</a></li>
+          <li role="none"><a href="dashboard.html" class="nav-link" role="menuitem">Dashboard</a></li>
+          <li role="none"><a href="analyze-text.html" class="nav-link" role="menuitem">Workspace</a></li>
+          <li role="none"><a href="history.html" class="nav-link" role="menuitem">History</a></li>
+          <li role="none"><a href="login.html" class="nav-link" role="menuitem">Sign In</a></li>
+        </ul>
+
+        <!-- Navigation Action Buttons -->
+        <div class="nav-actions">
+          <a href="dashboard.html" class="btn btn-outline btn-sm">Dashboard</a>
+          <a href="analyze-text.html" class="btn btn-primary btn-sm">New Analysis</a>
+        </div>
+
+        <!-- Mobile Navigation Toggle -->
+        <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       Main Content: Analysis Results & Assessment View
+       ======================================================================== -->
+  <main class="main-content" id="main-content" style="padding-top: 3rem; padding-bottom: 4rem;">
+    <div class="container container-narrow">
+
+      <!-- Breadcrumbs & Header -->
+      <div style="margin-bottom: 2rem;">
+        <div class="flex items-center gap-2" style="font-size: 0.85rem; color: var(--color-text-dim); margin-bottom: 0.5rem;">
+          <a href="dashboard.html" style="color: var(--color-text-dim);">Workspace</a>
+          <span>/</span>
+          <span style="color: var(--color-primary);">Analysis Assessment</span>
+        </div>
+        <h1 style="font-size: 2.25rem; font-weight: 800; margin: 0 0 0.5rem 0;">Assessment Outcome</h1>
+        <p style="color: var(--color-text-dim); margin: 0;">
+          Linguistic feature evaluation, contextual review, and assistive reporting.
+        </p>
+      </div>
+
+      <!-- Pending Backend Demonstration Alert -->
+      <div class="alert alert-responsible-ai" style="margin-bottom: 2rem;">
+        <div class="alert-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        </div>
+        <div class="alert-content">
+          <div class="alert-title">Stage 4 Demonstration State — Live Model Integration Pending</div>
+          <p style="margin: 0; font-size: 0.88rem;">
+            This results view demonstrates the agreed assessment layout. In accordance with strict project rules, <strong>no fake classification scores, confidence percentages, flagged tokens, or synthetic reports are generated</strong>. Real classification will connect to confirmed backend endpoints.
+          </p>
+        </div>
+      </div>
+
+      <!-- Primary Outcome Card -->
+      <div class="results-hero-card">
+        <div class="flex justify-between items-center" style="flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.25rem;">
+          <div>
+            <span class="section-tag" style="margin-bottom: 0;">Model Verdict</span>
+            <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0.25rem 0 0 0;">Primary Classification</h2>
+          </div>
+          <span class="badge" style="background: rgba(0, 210, 255, 0.15); color: var(--color-primary); border-color: rgba(0, 210, 255, 0.4);">
+            Stage 4 Demonstration
+          </span>
+        </div>
+
+        <div class="results-verdict-box">
+          <div>
+            <div style="font-size: 0.82rem; color: var(--color-text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">
+              Assigned Category
+            </div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: var(--color-primary);">
+              Pending Backend Evaluation
+            </div>
+            <div style="font-size: 0.82rem; color: var(--color-text-dim); margin-top: 0.25rem;">
+              Agreed categories: <em>Normal, Insult, Threat, Hate Speech, Toxic/Abusive Language</em>
+            </div>
+          </div>
+          <div>
+            <span class="badge" style="background: rgba(148, 163, 184, 0.1); color: var(--color-text-dim); font-size: 0.85rem; padding: 0.4rem 0.85rem;">
+              Confidence: Pending Backend Connection
+            </span>
+          </div>
+        </div>
+
+        <!-- Evaluated Content Review Box -->
+        <div>
+          <div class="flex justify-between items-center" style="margin-bottom: 0.5rem;">
+            <strong style="font-size: 0.9rem; color: var(--color-text-main);">Evaluated Content Context:</strong>
+            <span style="font-size: 0.78rem; color: var(--color-text-dim);">Input Session Data</span>
+          </div>
+          <div class="results-context-box" id="result-context-container">Sample Demonstration Context: Linguistic features are evaluated in holistic context. A single word or isolated phrase does not constitute definitive proof of cyberbullying without relational and timeline review.</div>
+        </div>
+
+        <!-- Save Status Notice -->
+        <div style="font-size: 0.82rem; color: var(--color-text-dim); margin-top: 1rem; border-top: 1px solid var(--color-border-subtle); padding-top: 0.75rem;">
+          Note: In accordance with project restrictions, this analysis is <strong>not claimed as saved to database history</strong> until backend storage confirmation.
+        </div>
+      </div>
+
+      <!-- Responsible AI Advisory Callout -->
+      <div class="alert alert-responsible-ai" style="margin-bottom: 2rem;">
+        <div class="alert-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="alert-content">
+          <div class="alert-title">Responsible AI Reminder: Language Requires Context</div>
+          <p style="margin: 0; font-size: 0.88rem; line-height: 1.5;">
+            A single detected statement does not constitute definitive proof of cyberbullying. CyAware operates as an assistive intelligence layer for human review. Automated blocking or punitive actions should never be taken without comprehensive situational review by a human moderator.
+          </p>
+        </div>
+      </div>
+
+      <!-- Human Feedback Section (Target: POST /api/feedback) -->
+      <div class="feedback-box">
+        <div class="flex justify-between items-center" style="flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+          <h3 style="font-size: 1.05rem; font-weight: 700; margin: 0;">
+            Auditor Feedback &amp; Calibration
+          </h3>
+          <span style="font-size: 0.75rem; color: var(--color-primary); font-family: var(--font-family-mono);">
+            Target: POST /api/feedback
+          </span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--color-text-dim); margin-bottom: 1rem;">
+          Was this classification helpful? Feedback will help calibrate model quality once the backend endpoint is confirmed.
+        </p>
+
+        <div class="flex items-center gap-3" style="flex-wrap: wrap; margin-bottom: 1rem;">
+          <button type="button" class="btn btn-outline btn-sm" disabled title="Feedback submission disabled pending backend confirmation">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.3rem;"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+            Agree with Classification
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" disabled title="Feedback submission disabled pending backend confirmation">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.3rem;"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"/></svg>
+            Flag Inaccuracy
+          </button>
+        </div>
+
+        <div style="font-size: 0.8rem; color: var(--color-text-dim);">
+          <span class="badge" style="background: rgba(239, 68, 68, 0.12); color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">
+            Feedback submission kept disabled pending backend request schema confirmation
+          </span>
+        </div>
+      </div>
+
+      <!-- Incident Report Presentation Section (Target: GET /api/reports/{id}) -->
+      <div style="margin-bottom: 2.5rem;">
+        <div class="flex justify-between items-center" style="margin-bottom: 0.75rem;">
+          <h3 style="font-size: 1.05rem; font-weight: 700; margin: 0;">
+            Incident Audit Report
+          </h3>
+          <span style="font-size: 0.75rem; color: var(--color-primary); font-family: var(--font-family-mono);">
+            Target: GET /api/reports/{id}
+          </span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--color-text-dim); margin-bottom: 1rem;">
+          Generate or print an assistive incident audit sheet for documentation.
+        </p>
+
+        <!-- Printable Report Preview Sheet -->
+        <div class="report-preview-sheet" id="incident-report-sheet">
+          <div class="report-header">
+            <div>
+              <div class="report-title">CyAware Incident Assessment Audit Sheet</div>
+              <div class="report-subtitle">NLP-Based Cyberbullying Detection &amp; Context Evaluation Platform</div>
+            </div>
+            <div style="text-align: right; font-size: 0.8rem; color: #64748b;">
+              <div>Case ID: <strong>Pending Backend Generation</strong></div>
+              <div>Generated: <strong>Pending Backend Generation</strong></div>
+            </div>
+          </div>
+
+          <div class="report-meta-grid">
+            <div class="report-meta-item">
+              <strong>Assessment Channel:</strong> Single Text Analysis
+            </div>
+            <div class="report-meta-item">
+              <strong>Evaluation Engine:</strong> Pending Backend Specification
+            </div>
+            <div class="report-meta-item">
+              <strong>Classification Status:</strong> Pending Backend Connection
+            </div>
+            <div class="report-meta-item">
+              <strong>Auditor Role:</strong> Pending Authentication Confirmation
+            </div>
+          </div>
+
+          <div class="report-section">
+            <div class="report-section-title">Contextual Evidence Summary</div>
+            <p style="font-size: 0.85rem; color: #334155; margin: 0.5rem 0;">
+              Linguistic feature extraction was performed for evaluation against the five agreed categories: Normal, Insult, Threat, Hate Speech, and Toxic/Abusive Language.
+            </p>
+          </div>
+
+          <div class="report-notice-box">
+            <strong>Mandatory Ethical Advisory:</strong> This document serves as an assistive technical summary for trained human review. It does not constitute legal proof or automated disciplinary evidence. Human situational context must be verified.
+          </div>
+        </div>
+
+        <!-- Report Action Buttons -->
+        <div class="flex items-center gap-3 no-print" style="margin-top: 1rem;">
+          <button type="button" class="btn btn-primary btn-sm" id="btn-print-report">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.3rem;"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print / Save to PDF
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" id="btn-download-report" disabled title="Download disabled pending backend format confirmation">
+            Download Report (Pending Backend Format)
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Area: Analyze Another -->
+      <div class="card no-print" style="padding: 1.75rem; text-align: center; margin-top: 2rem;">
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">Ready to Perform Another Evaluation?</h3>
+        <p style="font-size: 0.85rem; color: var(--color-text-dim); margin-bottom: 1.25rem;">
+          Launch any of the four core analysis interfaces:
+        </p>
+        <div class="flex justify-center items-center gap-3" style="flex-wrap: wrap;">
+          <a href="analyze-text.html" class="btn btn-outline btn-sm">Text Analysis</a>
+          <a href="analyze-file.html" class="btn btn-outline btn-sm">File Upload</a>
+          <a href="analyze-image.html" class="btn btn-outline btn-sm">Screenshot OCR</a>
+          <a href="analyze-conversation.html" class="btn btn-outline btn-sm">Conversation Dialogue</a>
+          <a href="dashboard.html" class="btn btn-primary btn-sm">Return to Dashboard</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       Global Footer
+       ======================================================================== -->
+  <footer class="site-footer no-print">
+    <div class="container">
+      <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+        <div>
+          &copy; 2026 CyAware Project. NLP-Based Cyberbullying Detection Platform.
+        </div>
+        <div>
+          <a href="index.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">Home</a>
+          <a href="dashboard.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">Dashboard</a>
+          <a href="history.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">History</a>
+          <a href="login.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">Sign In</a>
+          Branch: <code style="color: var(--color-primary);">frontend</code>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/results.js"></script>
+</body>
+</html>
+

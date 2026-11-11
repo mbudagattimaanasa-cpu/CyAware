@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Shield Outer Glow -->
+  <path d="M24 4L7 11V22C7 32.5 14.3 42.2 24 44.8C33.7 42.2 41 32.5 41 22V11L24 4Z" 
+        fill="url(#shield_glow)" fill-opacity="0.2"/>
+  
+  <!-- Shield Outer Border -->
+  <path d="M24 4L7 11V22C7 32.5 14.3 42.2 24 44.8C33.7 42.2 41 32.5 41 22V11L24 4Z" 
+        stroke="url(#shield_grad)" stroke-width="2.5" stroke-linejoin="round"/>
+  
+  <!-- Circuit Traces -->
+  <path d="M16 20H20V26" stroke="#00d2ff" stroke-width="1.75" stroke-linecap="round"/>
+  <circle cx="16" cy="20" r="1.5" fill="#00d2ff"/>
+  
+  <path d="M32 20H28V26" stroke="#00d2ff" stroke-width="1.75" stroke-linecap="round"/>
+  <circle cx="32" cy="20" r="1.5" fill="#00d2ff"/>
+  
+  <path d="M24 14V18" stroke="#38bdf8" stroke-width="1.75" stroke-linecap="round"/>
+  <circle cx="24" cy="14" r="1.5" fill="#38bdf8"/>
+  
+  <!-- Central Pulse Node -->
+  <circle cx="24" cy="26" r="3.5" fill="#00d2ff"/>
+  <circle cx="24" cy="26" r="6" stroke="#00d2ff" stroke-width="1" stroke-dasharray="2 2"/>
+
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="shield_grad" x1="7" y1="4" x2="41" y2="44.8" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00d2ff"/>
+      <stop offset="0.6" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#6366f1"/>
+    </linearGradient>
+    <radialGradient id="shield_glow" cx="24" cy="24" r="18" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00d2ff" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#070d1e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>
+

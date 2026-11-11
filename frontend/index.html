@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="CyAware is an NLP-Based Cyberbullying Detector that assists communities and moderators in identifying online harassment, threats, and toxic language with responsible AI governance.">
+  <title>CyAware — NLP-Based Cyberbullying Detection Platform</title>
+
+  <!-- CyAware Design System Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/layouts.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+
+<body class="site-wrapper">
+
+  <!-- ========================================================================
+       Global Navigation Header
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="navbar" aria-label="Main Navigation">
+        <!-- Brand Logo -->
+        <a href="index.html" class="brand" aria-label="CyAware Home">
+          <div class="brand-icon">
+            <img src="assets/icons/cyaware-logo.svg" alt="CyAware Shield Logo" width="32" height="32">
+          </div>
+          <span class="brand-text">CyAware</span>
+          <span class="brand-badge">NLP AI</span>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <ul class="nav-menu" role="menubar">
+          <li role="none"><a href="#about" class="nav-link active" role="menuitem">About</a></li>
+          <li role="none"><a href="#taxonomy" class="nav-link" role="menuitem">Taxonomy</a></li>
+          <li role="none"><a href="#capabilities" class="nav-link" role="menuitem">Capabilities</a></li>
+          <li role="none"><a href="#responsible-ai" class="nav-link" role="menuitem">Responsible AI</a></li>
+          <li role="none"><a href="#components" class="nav-link" role="menuitem">UI System</a></li>
+          <li role="none"><a href="dashboard.html" class="nav-link" role="menuitem">Dashboard</a></li>
+          <li role="none"><a href="history.html" class="nav-link" role="menuitem">History</a></li>
+          <li role="none"><a href="faq.html" class="nav-link" role="menuitem">Awareness &amp; FAQ</a></li>
+          <li role="none"><a href="login.html" class="nav-link" role="menuitem">Sign In</a></li>
+          <li role="none"><a href="register.html" class="nav-link" role="menuitem">Register</a></li>
+        </ul>
+
+        <!-- Navigation Action Buttons -->
+        <div class="nav-actions">
+          <a href="login.html" class="btn btn-outline btn-sm">Sign In</a>
+          <a href="analyze-text.html" class="btn btn-primary btn-sm">Launch Detector</a>
+        </div>
+
+        <!-- Mobile Navigation Toggle -->
+        <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       Main Content Area
+       ======================================================================== -->
+  <main class="main-content" id="main-content">
+
+    <!-- 1. HERO SECTION -->
+    <section class="section section-hero" id="about">
+      <div class="container">
+        <div class="section-header" style="max-width: 820px;">
+          <span class="section-tag">Digital Safety &amp; NLP Intelligence</span>
+          <h1>Proactive Defense Against Cyberbullying &amp; Online Abuse</h1>
+          <p>
+            CyAware applies Natural Language Processing to detect harassment, intimidation,
+            and toxic discourse across text messages, documents, and multi-turn conversations — providing
+            contextual, assistive moderation for safer digital communities.
+          </p>
+          <div class="flex justify-center gap-2" style="margin-top: 2rem;">
+            <a href="#taxonomy" class="btn btn-primary btn-lg">Explore Classification</a>
+            <a href="#responsible-ai" class="btn btn-secondary btn-lg">Responsible AI Charter</a>
+          </div>
+        </div>
+
+        <!-- Architecture Pillars -->
+        <div class="grid grid-cols-3" style="margin-top: 3.5rem;">
+          <div class="stat-card">
+            <div class="stat-value">5 Classes</div>
+            <div class="stat-label">Agreed Classification Taxonomy</div>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Standardized categories from benign communication to
+              high-severity threat analysis.</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">Context-First</div>
+            <div class="stat-label">Multi-Turn Conversation Awareness</div>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Evaluates dialogue history to understand conversational
+              nuances, not just isolated tokens.</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">Assistive AI</div>
+            <div class="stat-label">Human-in-the-Loop Moderation</div>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Zero automated punishment or instant banning. All flags
+              empower human discretionary review.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. RESPONSIBLE AI COMMITMENT -->
+    <section class="section section-muted" id="responsible-ai">
+      <div class="container container-narrow">
+        <div class="section-header">
+          <span class="section-tag">Ethical Machine Learning</span>
+          <h2>Responsible AI Commitment</h2>
+          <p>How CyAware ensures fair, transparent, and non-punitive digital moderation.</p>
+        </div>
+
+        <!-- Highlight Alert Banner -->
+        <div class="alert alert-responsible-ai" role="region" aria-label="Responsible AI Charter">
+          <div class="alert-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <div class="alert-content">
+            <div class="alert-title">Context Matters: Words Require Situational Review</div>
+            <p style="color: inherit; margin: 0; font-size: 0.92rem;">
+              Language is inherently nuanced. <strong>A single detected message does not constitute definitive proof of
+                cyberbullying without contextual evaluation.</strong>
+              CyAware operates strictly as an assistive intelligence layer. The platform does not enforce automated
+              punishments, account suspensions, or automated bans.
+              Final determinations always remain with human moderators.
+            </p>
+          </div>
+        </div>
+
+        <!-- 3 Core Ethical Tenets -->
+        <div class="grid grid-cols-3 gap-2" style="margin-top: 2rem;">
+          <div class="card">
+            <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;">Contextual Nuance</h4>
+            <p style="font-size: 0.88rem;">Evaluating conversational patterns and dialogue relationships rather than
+              relying on blunt keyword blacklists.</p>
+          </div>
+          <div class="card">
+            <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;">Assistive Transparency</h4>
+            <p style="font-size: 0.88rem;">Clear classification indicators designed to assist human decision-making with
+              explainable signals.</p>
+          </div>
+          <div class="card">
+            <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;">Non-Punitive Design</h4>
+            <p style="font-size: 0.88rem;">Protecting users against algorithmic bias and false positives through
+              feedback loops and dispute avenues.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. AGREED TAXONOMY SHOWCASE -->
+    <section class="section" id="taxonomy">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Standardized Taxonomy</span>
+          <h2>Agreed Classification Categories</h2>
+          <p>
+            The CyAware classification model is aligned to five standardized categories to ensure consistent evaluation.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-5 gap-2">
+          <!-- 1. Normal -->
+          <div class="card category-card" data-cat="normal">
+            <div style="margin-bottom: 0.75rem;">
+              <span class="badge badge-normal">Normal</span>
+            </div>
+            <h4 style="margin-bottom: 0.5rem;">Normal</h4>
+            <p style="font-size: 0.88rem;">Constructive communication, benign banter, and everyday conversational
+              exchanges without abusive intent.</p>
+          </div>
+
+          <!-- 2. Insult -->
+          <div class="card category-card" data-cat="insult">
+            <div style="margin-bottom: 0.75rem;">
+              <span class="badge badge-insult">Insult</span>
+            </div>
+            <h4 style="margin-bottom: 0.5rem;">Insult</h4>
+            <p style="font-size: 0.88rem;">Disparaging, demeaning, or personally offensive remarks intended to belittle
+              an individual's character or appearance.</p>
+          </div>
+
+          <!-- 3. Threat -->
+          <div class="card category-card" data-cat="threat">
+            <div style="margin-bottom: 0.75rem;">
+              <span class="badge badge-threat">Threat</span>
+            </div>
+            <h4 style="margin-bottom: 0.5rem;">Threat</h4>
+            <p style="font-size: 0.88rem;">Declarations of intent to inflict physical, emotional, or psychological harm,
+              coercion, or violent intimidation.</p>
+          </div>
+
+          <!-- 4. Hate Speech -->
+          <div class="card category-card" data-cat="hate">
+            <div style="margin-bottom: 0.75rem;">
+              <span class="badge badge-hate">Hate Speech</span>
+            </div>
+            <h4 style="margin-bottom: 0.5rem;">Hate Speech</h4>
+            <p style="font-size: 0.88rem;">Attacks, vilification, or dehumanizing language directed against protected
+              identities, religion, race, gender, or disability.</p>
+          </div>
+
+          <!-- 5. Toxic/Abusive Language -->
+          <div class="card category-card" data-cat="toxic">
+            <div style="margin-bottom: 0.75rem;">
+              <span class="badge badge-toxic">Toxic / Abusive</span>
+            </div>
+            <h4 style="margin-bottom: 0.5rem;">Toxic Language</h4>
+            <p style="font-size: 0.88rem;">Excessively hostile, vulgar, profane, or aggressively antagonistic discourse
+              that degrades communicative safety.</p>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+          <p style="font-size: 0.85rem; color: var(--color-text-dim);">
+            * Note: These definitions represent the model's standardized classification framework. No synthetic or
+            unverified predictions are shown.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. PLATFORM CAPABILITIES -->
+    <section class="section section-muted" id="capabilities">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Platform Engines</span>
+          <h2>Comprehensive Analysis Interfaces</h2>
+          <p>Modular analysis workflows designed to connect to the 13 backend contract endpoints in future stages.</p>
+        </div>
+
+        <div class="grid grid-cols-4">
+          <!-- Text Analysis -->
+          <div class="card feature-card card-hover">
+            <div class="feature-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+            </div>
+            <h3 class="card-title">Single Text Analysis</h3>
+            <p class="card-body">Direct input stream for evaluating individual comments, posts, or messages in real
+              time.</p>
+            <div class="card-footer">
+              <span style="font-size: 0.75rem; color: var(--color-primary); font-family: var(--font-family-mono);">POST /api/analyze/text</span>
+              <a href="analyze-text.html" class="btn btn-primary btn-sm">Launch</a>
+            </div>
+          </div>
+
+          <!-- File & Screenshot OCR -->
+          <div class="card feature-card card-hover">
+            <div class="feature-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+            </div>
+            <h3 class="card-title">File &amp; Image OCR</h3>
+            <p class="card-body">Upload chat screenshots or document transcripts for automated text extraction and
+              classification.</p>
+            <div class="card-footer">
+              <span style="font-size: 0.75rem; color: var(--color-primary); font-family: var(--font-family-mono);">POST /api/analyze/image</span>
+              <div class="flex gap-1">
+                <a href="analyze-file.html" class="btn btn-outline btn-sm">File</a>
+                <a href="analyze-image.html" class="btn btn-primary btn-sm">OCR</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Multi-turn Conversation -->
+          <div class="card feature-card card-hover">
+            <div class="feature-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
+            <h3 class="card-title">Conversation Context</h3>
+            <p class="card-body">Evaluate multi-party chat transcripts to identify escalation, repeated targeting, and
+              relational patterns.</p>
+            <div class="card-footer">
+              <span style="font-size: 0.75rem; color: var(--color-primary); font-family: var(--font-family-mono);">POST /api/analyze/conversation</span>
+              <a href="analyze-conversation.html" class="btn btn-primary btn-sm">Launch</a>
+            </div>
+          </div>
+
+          <!-- Reports & History -->
+          <div class="card feature-card card-hover">
+            <div class="feature-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <h3 class="card-title">Audit Trail &amp; Reports</h3>
+            <p class="card-body">Maintain historical analysis logs, export detailed summary reports, and collect human
+              feedback.</p>
+            <div class="card-footer">
+              <span style="font-size: 0.75rem; color: var(--color-primary); font-family: var(--font-family-mono);">GET
+                /api/reports/{id}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. DESIGN SYSTEM COMPONENT SHOWCASE -->
+    <section class="section" id="components">
+      <div class="container container-narrow">
+        <div class="section-header">
+          <span class="section-tag">Developer Foundation</span>
+          <h2>Reusable UI Component Sandbox</h2>
+          <p>Preview of the core interactive components established in Stage 1 for upcoming interface views.</p>
+        </div>
+
+        <div class="card" style="margin-bottom: 2rem;">
+          <h4 style="margin-bottom: 1rem;">1. Button Variants</h4>
+          <div class="flex flex-wrap items-center gap-2" style="margin-bottom: 1.5rem;">
+            <button type="button" class="btn btn-primary"
+              onclick="CyAwareApp.showToast('Primary button triggered', 'info')">Primary Action</button>
+            <button type="button" class="btn btn-secondary"
+              onclick="CyAwareApp.showToast('Secondary button triggered', 'info')">Secondary</button>
+            <button type="button" class="btn btn-outline"
+              onclick="CyAwareApp.showToast('Outline button triggered', 'info')">Outline</button>
+            <button type="button" class="btn btn-danger"
+              onclick="CyAwareApp.showToast('Danger alert action', 'danger')">Danger</button>
+            <button type="button" class="btn btn-ghost"
+              onclick="CyAwareApp.showToast('Ghost button clicked', 'info')">Ghost</button>
+            <button type="button" class="btn btn-primary btn-sm">Small</button>
+            <button type="button" class="btn btn-primary btn-lg">Large</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="CyAwareApp.openModal('modal-info')">Preview Modal</button>
+          </div>
+
+          <h4 style="margin-bottom: 1rem;">2. Agreed Category Badges</h4>
+          <div class="flex flex-wrap items-center gap-2" style="margin-bottom: 1.5rem;">
+            <span class="badge badge-normal">Normal</span>
+            <span class="badge badge-insult">Insult</span>
+            <span class="badge badge-threat">Threat</span>
+            <span class="badge badge-hate">Hate Speech</span>
+            <span class="badge badge-toxic">Toxic / Abusive</span>
+          </div>
+
+          <h4 style="margin-bottom: 1rem;">3. Alert Banners</h4>
+          <div class="alert alert-info">
+            <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <div class="alert-content">
+              <div class="alert-title">Information Banner</div>
+              <p style="margin: 0; font-size: 0.9rem;">Demonstrating the standard informational notice component.</p>
+            </div>
+          </div>
+
+          <div class="alert alert-warning">
+            <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <div class="alert-content">
+              <div class="alert-title">Context Warning</div>
+              <p style="margin: 0; font-size: 0.9rem;">Automated classification should be validated by human operators.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       Global Footer
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Brand Summary -->
+        <div class="footer-col">
+          <div class="brand" style="margin-bottom: 1rem;">
+            <div class="brand-icon">
+              <img src="assets/icons/cyaware-logo.svg" alt="CyAware Logo" width="28" height="28">
+            </div>
+            <span class="brand-text">CyAware</span>
+          </div>
+          <p style="font-size: 0.9rem; max-width: 320px;">
+            NLP-Based Cyberbullying Detection Platform. Committed to ethical artificial intelligence, transparent
+            moderation, and safer digital interaction.
+          </p>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="#about">Overview</a></li>
+            <li><a href="#taxonomy">Agreed Taxonomy</a></li>
+            <li><a href="#capabilities">Platform Engines</a></li>
+            <li><a href="#responsible-ai">Responsible AI Charter</a></li>
+            <li><a href="login.html">Sign In</a></li>
+            <li><a href="register.html">Create Account</a></li>
+          </ul>
+        </div>
+
+        <!-- API Contract References -->
+        <div class="footer-col">
+          <h4>API Standards</h4>
+          <ul class="footer-links">
+            <li><a href="#capabilities">Text Engine (POST /api/analyze/text)</a></li>
+            <li><a href="#capabilities">File OCR (POST /api/analyze/file)</a></li>
+            <li><a href="#capabilities">Conversation (POST /api/analyze/conversation)</a></li>
+            <li><a href="#capabilities">Feedback (POST /api/feedback)</a></li>
+          </ul>
+        </div>
+
+        <!-- Project & Governance -->
+        <div class="footer-col">
+          <h4>Governance</h4>
+          <ul class="footer-links">
+            <li><a href="https://github.com/mbudagattimaanasa-cpu/CyAware" target="_blank"
+                rel="noopener noreferrer">GitHub Repository</a></li>
+            <li><a href="#responsible-ai">Human-in-the-Loop Policy</a></li>
+            <li><a href="faq.html#resources">Safety Hotline Resources</a></li>
+            <li><a href="#about">Version 1.0.0 (Stage 1)</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Footer Bottom Bar -->
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 CyAware Project. NLP-Based Cyberbullying Detection. All rights reserved.
+        </div>
+        <div>
+          <a href="dashboard.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">Dashboard</a>
+          <a href="history.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">History</a>
+          <a href="faq.html" style="color: var(--color-text-muted); margin-right: 1.25rem;">Awareness &amp; FAQ</a>
+          Branch: <code style="color: var(--color-primary);">frontend</code> | Vanilla HTML5 / CSS3 / ES6
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Accessible Status & Notification Modal -->
+  <div class="modal-backdrop" id="modal-info" aria-hidden="true" role="dialog" aria-labelledby="modal-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">CyAware — Design Foundation Status</h3>
+        <button type="button" class="modal-close" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Stage 1 Visual Foundation Active.</strong></p>
+        <p>Interactive authentication (<code>POST /api/auth/login</code>) and analysis pipelines (<code>POST /api/analyze/text</code>) will connect according to the Shared API Contract in upcoming stages.</p>
+        <div class="alert alert-info" style="margin-top: 1rem; margin-bottom: 0;">
+          <p style="margin: 0; font-size: 0.88rem;">All detector modules map to the agreed five categories: <strong>Normal, Insult, Threat, Hate Speech, and Toxic/Abusive Language</strong>.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-sm modal-close">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
