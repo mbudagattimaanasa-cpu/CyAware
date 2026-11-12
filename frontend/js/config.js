@@ -2,20 +2,22 @@
  * CyAware — Frontend Configuration & Contract Endpoints
  * File: frontend/js/config.js
  * 
- * NOTE: Strictly follows the Shared API Contract Prompt.
- * Endpoints are fixed to the 13 agreed paths. No extraneous or invented paths.
+ * NOTE: Strictly follows the Shared API Contract Prompt and Backend Implementation.
+ * Includes user privacy & account management endpoints implemented in backend Stage 5.
  */
 
 const CyAwareConfig = Object.freeze({
   // Base URL for backend API (can be overridden via environment/proxy)
   API_BASE_URL: window.CYAWARE_API_BASE || '/api',
 
-  // 13 Agreed Contract Endpoints
+  // Contract & Backend Endpoints
   ENDPOINTS: Object.freeze({
     // Authentication
     AUTH_REGISTER: '/api/auth/register',
     AUTH_LOGIN: '/api/auth/login',
     AUTH_LOGOUT: '/api/auth/logout',
+    AUTH_ME: '/api/auth/me',
+    AUTH_CSRF_TOKEN: '/api/auth/csrf-token',
 
     // Analysis Engines
     ANALYZE_TEXT: '/api/analyze/text',
@@ -25,12 +27,17 @@ const CyAwareConfig = Object.freeze({
 
     // History & Reports
     ANALYSES: '/api/analyses',
-    REPORT_BY_ID: (id) => `/api/reports/${encodeURIComponent(id)}`,
+    ANALYSIS_BY_ID: (id) => `/api/analyses/${encodeURIComponent(id)}`,
+    REPORT_BY_ID: (id) => `/api/reports/${encodeURIComponent(id)}`, // Unimplemented in backend; placeholder
 
     // Dashboards & Feedback
     DASHBOARD: '/api/dashboard',
-    ADMIN_DASHBOARD: '/api/admin/dashboard',
-    FEEDBACK: '/api/feedback'
+    ADMIN_DASHBOARD: '/api/admin/dashboard', // Unimplemented in backend; placeholder
+    FEEDBACK: '/api/feedback', // Unimplemented in backend; placeholder
+
+    // User Privacy & Account Management
+    USER_EXPORT: '/api/user/export',
+    USER_ACCOUNT_DELETE: '/api/user/account'
   }),
 
   // Agreed 5 Classification Categories

@@ -116,12 +116,12 @@
         <form id="image-analysis-form" novalidate>
           <!-- Drag & Drop Zone -->
           <div class="dropzone" id="image-dropzone">
-            <input type="file" id="image-input" class="dropzone-input" accept="image/png, image/jpeg, image/webp" aria-label="Upload chat screenshot image">
+            <input type="file" id="image-input" name="image" class="dropzone-input" accept="image/png, image/jpeg" aria-label="Upload chat screenshot image">
             <div class="dropzone-icon">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
             </div>
             <div class="dropzone-title">Drag &amp; drop chat screenshot here, or click to browse</div>
-            <div class="dropzone-hint">Standard image formats are accepted for local preview. Final supported backend formats and upload size limits are subject to backend confirmation.</div>
+            <div class="dropzone-hint">Supported formats: PNG, JPG, JPEG (up to 5 MB). Uploads are authenticated and processed server-side.</div>
           </div>
 
           <!-- Image Preview Container (Hidden until image selected) -->

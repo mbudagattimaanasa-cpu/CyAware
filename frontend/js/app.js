@@ -398,6 +398,159 @@
   }
 
   // ==========================================================================
+  // Global Authentication & Navigation Controller (Task 3)
+  // ==========================================================================
+  let sessionUserPromise = null;
+  let currentSessionUser = null;
+
+  async function getSessionUser(forceRefresh = false) {
+    if (currentSessionUser && !forceRefresh) {
+      return currentSessionUser;
+    }
+    if (sessionUserPromise && !forceRefresh) {
+      return sessionUserPromise;
+    }
+
+    if (!window.CyAwareAPI || typeof window.CyAwareAPI.getMe !== 'function') {
+      return null;
+    }
+
+    sessionUserPromise = (async () => {
+      try {
+        const response = await window.CyAwareAPI.getMe();
+        if (response && response.success && response.data && response.data.user) {
+          currentSessionUser = response.data.user;
+          return currentSessionUser;
+        }
+      } catch (err) {
+        currentSessionUser = null;
+      } finally {
+        sessionUserPromise = null;
+      }
+      currentSessionUser = null;
+      return null;
+    })();
+
+    return sessionUserPromise;
+  }
+
+  function renderNavState(user) {
+    const navMenus = document.querySelectorAll('.nav-menu');
+    const actionContainers = document.querySelectorAll('.nav-actions, .header-actions');
+
+    navMenus.forEach(menu => {
+      const signInLink = menu.querySelector('a[href="login.html"], a[href$="/login.html"]');
+      const signInLi = signInLink ? signInLink.closest('li') : null;
+      const registerLink = menu.querySelector('a[href="register.html"], a[href$="/register.html"]');
+      const registerLi = registerLink ? registerLink.closest('li') : null;
+
+      let userLi = menu.querySelector('.nav-auth-user');
+      let logoutLi = menu.querySelector('.nav-auth-logout');
+
+      if (user && user.username) {
+        // Authenticated State
+        if (signInLi) signInLi.style.display = 'none';
+        if (registerLi) registerLi.style.display = 'none';
+
+        if (!userLi) {
+          userLi = document.createElement('li');
+          userLi.className = 'nav-auth-user';
+          userLi.setAttribute('role', 'none');
+          userLi.innerHTML = `
+            <a href="settings.html" class="nav-link" role="menuitem" title="User Settings &amp; Profile" style="display: inline-flex; align-items: center; gap: 0.35rem;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span class="nav-username-label">${escapeHtml(user.username)}</span>
+            </a>
+          `;
+          menu.appendChild(userLi);
+        } else {
+          userLi.style.display = '';
+          const label = userLi.querySelector('.nav-username-label');
+          if (label) label.textContent = user.username;
+        }
+
+        if (!logoutLi) {
+          logoutLi = document.createElement('li');
+          logoutLi.className = 'nav-auth-logout';
+          logoutLi.setAttribute('role', 'none');
+          logoutLi.innerHTML = `
+            <a href="#logout" class="nav-link btn-nav-logout" role="menuitem" style="cursor: pointer;">Sign Out</a>
+          `;
+          menu.appendChild(logoutLi);
+        } else {
+          logoutLi.style.display = '';
+        }
+      } else {
+        // Guest State
+        if (signInLi) signInLi.style.display = '';
+        if (registerLi) registerLi.style.display = '';
+        if (userLi) userLi.style.display = 'none';
+        if (logoutLi) logoutLi.style.display = 'none';
+      }
+    });
+
+    // Update Action Buttons (.nav-actions / .header-actions)
+    actionContainers.forEach(container => {
+      const signInBtn = container.querySelector('a[href="login.html"], a[href$="/login.html"]');
+      let actionLogoutBtn = container.querySelector('.btn-nav-action-logout');
+
+      if (user && user.username) {
+        if (signInBtn) signInBtn.style.display = 'none';
+
+        if (!actionLogoutBtn && signInBtn) {
+          actionLogoutBtn = document.createElement('button');
+          actionLogoutBtn.type = 'button';
+          actionLogoutBtn.className = 'btn btn-outline btn-sm btn-nav-logout btn-nav-action-logout';
+          actionLogoutBtn.textContent = 'Sign Out';
+          signInBtn.parentNode.insertBefore(actionLogoutBtn, signInBtn);
+        } else if (actionLogoutBtn) {
+          actionLogoutBtn.style.display = '';
+        }
+      } else {
+        if (signInBtn) signInBtn.style.display = '';
+        if (actionLogoutBtn) actionLogoutBtn.style.display = 'none';
+      }
+    });
+  }
+
+  function initLogoutHandler() {
+    document.addEventListener('click', async function (e) {
+      const logoutTrigger = e.target.closest('.btn-nav-logout');
+      if (!logoutTrigger) return;
+      e.preventDefault();
+
+      try {
+        if (window.CyAwareAPI && typeof window.CyAwareAPI.logout === 'function') {
+          await window.CyAwareAPI.logout();
+        }
+        currentSessionUser = null;
+        sessionUserPromise = null;
+        showToast('Signed out successfully.', 'info');
+        renderNavState(null);
+
+        // Check if current page is protected
+        const protectedKeywords = ['dashboard', 'history', 'settings', 'admin'];
+        const isProtected = protectedKeywords.some(keyword => window.location.pathname.includes(keyword));
+        if (isProtected) {
+          setTimeout(function () {
+            window.location.href = 'login.html';
+          }, 400);
+        }
+      } catch (err) {
+        showToast(err.message || 'Error occurred while signing out.', 'danger');
+      }
+    });
+  }
+
+  async function initGlobalAuthNav() {
+    initLogoutHandler();
+
+    // Check session user
+    const user = await getSessionUser();
+    renderNavState(user);
+  }
+
+  // ==========================================================================
   // Public Namespace
   // ==========================================================================
   window.CyAwareApp = {
@@ -408,7 +561,9 @@
     applyUserPreferences: applyUserPreferences,
     getUserPreferences: getUserPreferences,
     saveUserPreference: saveUserPreference,
-    resetLocalPreferences: resetLocalPreferences
+    resetLocalPreferences: resetLocalPreferences,
+    getSessionUser: getSessionUser,
+    renderNavState: renderNavState
   };
 
   // Apply preferences immediately if document is available
@@ -421,6 +576,7 @@
     initSmoothScroll();
     initModals();
     initSettingsPage();
+    initGlobalAuthNav();
   });
 })();
 

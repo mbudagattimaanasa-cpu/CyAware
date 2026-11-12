@@ -182,46 +182,91 @@
         </div>
       </section>
 
-      <!-- Section 3: User Account & Authentication (Pending Backend) -->
+      <!-- Section 3: User Account & Profile -->
       <section class="settings-section" aria-labelledby="heading-account">
         <div class="flex items-center justify-between" style="margin-bottom: 1rem;">
           <h2 id="heading-account" style="font-size: 1.25rem; font-weight: 700; margin: 0; color: var(--color-text-main);">
-            User Account &amp; Authentication
+            User Account &amp; Profile
           </h2>
-          <span class="badge" style="background: rgba(148, 163, 184, 0.1); color: var(--color-text-dim);">
-            Pending Backend Account API
+          <span id="account-status-badge" class="badge badge-outline" style="font-size: 0.75rem;">
+            Checking Session...
           </span>
         </div>
 
-        <div class="settings-card" style="background: rgba(15, 23, 42, 0.5); border: 1px dashed var(--color-border-medium);">
-          <div style="margin-bottom: 1.5rem;">
-            <p style="font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.6; margin-bottom: 1rem;">
-              Account-management operations (such as changing email addresses, updating passwords, or role permission assignment) require backend authentication endpoints not defined in the current Shared API Contract. In strict compliance with project rules, no speculative account mutation requests are made.
-            </p>
-          </div>
+        <div id="account-status-banner" style="margin-bottom: 1.25rem;"></div>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+        <div class="settings-card" id="account-profile-card">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
             <div>
-              <label for="disabled-account-email" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dim); margin-bottom: 0.35rem;">
-                Email Address
+              <label for="account-username" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dim); margin-bottom: 0.35rem;">
+                Username
               </label>
-              <input type="text" id="disabled-account-email" class="form-control" value="Pending Backend User Profile" disabled style="opacity: 0.6; cursor: not-allowed;">
+              <input type="text" id="account-username" class="form-control" value="Loading profile..." readonly style="opacity: 0.85;">
             </div>
             <div>
-              <label for="disabled-account-role" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dim); margin-bottom: 0.35rem;">
+              <label for="account-email" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dim); margin-bottom: 0.35rem;">
+                Email Address
+              </label>
+              <input type="text" id="account-email" class="form-control" value="Loading profile..." readonly style="opacity: 0.85;">
+            </div>
+            <div>
+              <label for="account-role" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--color-text-dim); margin-bottom: 0.35rem;">
                 Assigned Role
               </label>
-              <input type="text" id="disabled-account-role" class="form-control" value="Pending Backend Confirmation" disabled style="opacity: 0.6; cursor: not-allowed;">
+              <input type="text" id="account-role" class="form-control" value="Loading profile..." readonly style="opacity: 0.85;">
             </div>
           </div>
 
           <div class="flex items-center gap-3">
-            <button type="button" class="btn btn-outline btn-sm" disabled style="opacity: 0.5; cursor: not-allowed;">
+            <button type="button" class="btn btn-outline btn-sm" disabled style="opacity: 0.5; cursor: not-allowed;" title="Password updates are managed by administrators">
               Change Password
             </button>
             <span style="font-size: 0.8rem; color: var(--color-text-dim);">
-              Requires backend authentication service integration.
+              Password updates are managed by system administrators.
             </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Privacy & Data Management -->
+      <section class="settings-section" aria-labelledby="heading-privacy">
+        <h2 id="heading-privacy" style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--color-text-main);">
+          Privacy &amp; Data Management
+        </h2>
+
+        <div class="settings-card">
+          <!-- Row 1: Data Export -->
+          <div class="settings-row">
+            <div class="settings-info">
+              <div class="settings-label">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export Personal Data (JSON)
+              </div>
+              <p class="settings-desc">
+                Download a complete, machine-readable JSON archive of your personal profile, saved analysis history, and submitted feedback records.
+              </p>
+            </div>
+            <button type="button" id="btn-export-data" class="btn btn-outline btn-sm" style="white-space: nowrap;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export Data (JSON)
+            </button>
+          </div>
+
+          <!-- Row 2: Permanent Account Deletion -->
+          <div class="settings-row" style="border-bottom: none;">
+            <div class="settings-info">
+              <div class="settings-label" style="color: var(--color-danger, #ef4444);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Permanent Account Deletion
+              </div>
+              <p class="settings-desc">
+                Permanently purge your account, authentication session, profile, and all saved analyses. This action is atomic, irreversible, and clears server records.
+              </p>
+            </div>
+            <button type="button" id="btn-delete-account" class="btn btn-danger btn-sm" style="white-space: nowrap;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              Delete Account
+            </button>
           </div>
         </div>
       </section>
@@ -275,6 +320,38 @@
   </div>
 
   <!-- ========================================================================
+       Account Deletion Confirmation Modal Dialog
+       ======================================================================== -->
+  <div id="modal-delete-account-confirm" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-delete-title" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 id="modal-delete-title" class="modal-title" style="color: #ef4444; display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Confirm Permanent Account Deletion
+        </h3>
+        <button type="button" class="modal-close" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--color-text-main); margin-bottom: 0.75rem;">
+          Are you sure you want to delete your CyAware account?
+        </p>
+        <div class="alert alert-danger" style="margin: 0 0 1rem 0; padding: 0.75rem 1rem;">
+          <div style="font-size: 0.85rem; line-height: 1.5;">
+            <strong>Warning: This action is permanent and cannot be undone.</strong> All your profile details, session tokens, saved cyberbullying analysis records, and feedback entries will be permanently erased from the server database.
+          </div>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--color-text-dim); margin: 0;">
+          If you continue, your active session will be terminated and your account cannot be recovered.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline btn-sm modal-close" id="btn-cancel-delete">Cancel</button>
+        <button type="button" id="btn-confirm-delete-account" class="btn btn-danger btn-sm">Permanently Delete Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
        Global Footer
        ======================================================================== -->
   <footer class="site-footer">
@@ -296,7 +373,9 @@
 
   <!-- Scripts -->
   <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/settings.js"></script>
 </body>
 </html>
 

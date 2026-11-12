@@ -1,6 +1,7 @@
 import os
 from datetime import datetime, timezone
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory, abort, session, redirect
+from werkzeug.exceptions import NotFound
 from .config import config_by_name
 from . import database
 from .routes.auth import auth_bp
@@ -72,6 +73,53 @@ def create_app(config_name=None):
             },
             "message": "CyAware Backend API is operational."
         }), 200
+
+    # Frontend Static Hosting (Stage 3.1)
+    frontend_dir = os.path.abspath(os.path.join(app.root_path, "..", "..", "frontend"))
+
+    @app.route("/", methods=["GET"])
+    def serve_index():
+        return send_from_directory(frontend_dir, "index.html")
+
+    # Protected Admin Interface Route (Stage 3.5 Access Control)
+    @app.route("/admin.html", methods=["GET"])
+    @app.route("/admin", methods=["GET"])
+    def serve_admin_page():
+        user_id = session.get("user_id")
+        if not user_id:
+            return redirect("/login.html")
+
+        user = database.query_db(
+            "SELECT id, role, is_active FROM users WHERE id = ?",
+            (user_id,),
+            one=True
+        )
+        if not user or user["is_active"] != 1:
+            session.clear()
+            return redirect("/login.html")
+
+        if user["role"] != "admin":
+            abort(403)
+
+        return send_from_directory(frontend_dir, "admin.html")
+
+    @app.route("/<path:filename>", methods=["GET"])
+    def serve_frontend_file(filename):
+        # Do not serve frontend static files for /api/... routes
+        if filename == "api" or filename.startswith("api/"):
+            abort(404)
+        if filename in ("admin.html", "admin"):
+            return serve_admin_page()
+        try:
+            return send_from_directory(frontend_dir, filename)
+        except NotFound:
+            # Check for extensionless HTML route e.g. /login -> login.html
+            if os.path.isfile(os.path.join(frontend_dir, filename + ".html")):
+                try:
+                    return send_from_directory(frontend_dir, filename + ".html")
+                except NotFound:
+                    pass
+            abort(404)
 
     # Standard JSON Error Handlers
     @app.errorhandler(400)

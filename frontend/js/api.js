@@ -2,245 +2,400 @@
  * CyAware — API Client Layer
  * File: frontend/js/api.js
  * 
- * Centralized API client module strictly adhering to the Shared API Contract.
- * Separates network transport logic from UI controllers.
+ * Centralized API client module connecting the frontend to the CyAware Flask backend.
+ * Strictly adheres to the Shared API Contract (docs/api_contract.md).
  * 
- * Confirmed Endpoints for Stage 3, 4 & 5:
+ * Implemented Endpoints:
+ * - GET  /api/health
+ * - POST /api/auth/register
+ * - POST /api/auth/login
+ * - POST /api/auth/logout
+ * - GET  /api/auth/me
+ * - GET  /api/auth/csrf-token
  * - POST /api/analyze/text
  * - POST /api/analyze/file
  * - POST /api/analyze/image
  * - POST /api/analyze/conversation
- * - GET /api/dashboard
- * - GET /api/analyses
+ * - GET  /api/dashboard
+ * - GET  /api/analyses
  * - DELETE /api/analyses/{id}
- * - GET /api/reports/{id}
- * - POST /api/feedback
- * - GET /api/admin/dashboard
+ * - GET  /api/user/export
+ * - DELETE /api/user/account
  * 
- * NOTE: Live server requests are pending backend schema finalization.
- * GET /api/analyses/{id} is NOT confirmed in the shared contract and is omitted.
- * Provides consistent promise-based interfaces and demonstration feedback adapters.
+ * Placeholders (unimplemented in backend):
+ * - GET  /api/admin/dashboard (returns status: PENDING_BACKEND)
+ * - GET  /api/reports/{id}     (returns status: PENDING_BACKEND)
+ * - POST /api/feedback         (returns status: PENDING_BACKEND)
  */
 
 (function () {
   'use strict';
 
   const config = window.CyAwareConfig || {
-    API_BASE_URL: '/api',
-    ENDPOINTS: {
-      ANALYZE_TEXT: '/api/analyze/text',
-      ANALYZE_FILE: '/api/analyze/file',
-      ANALYZE_IMAGE: '/api/analyze/image',
-      ANALYZE_CONVERSATION: '/api/analyze/conversation',
-      DASHBOARD: '/api/dashboard',
-      ANALYSES: '/api/analyses',
-      REPORT_BY_ID: (id) => `/api/reports/${encodeURIComponent(id)}`,
-      FEEDBACK: '/api/feedback',
-      ADMIN_DASHBOARD: '/api/admin/dashboard'
-    }
+    API_BASE_URL: '/api'
   };
 
+  const API_BASE = config.API_BASE_URL || '/api';
+
+  // In-memory CSRF token cache
+  let cachedCsrfToken = null;
+
   /**
-   * Helper to inspect backend readiness
+   * Retrieve or establish CSRF token for the active session.
+   * Target: GET /api/auth/csrf-token
    */
-  async function checkBackendConnection() {
-    return {
-      connected: false,
-      message: 'Backend server integration pending confirmed schema.'
-    };
+  async function getCsrfToken(forceRefresh = false) {
+    if (cachedCsrfToken && !forceRefresh) {
+      return cachedCsrfToken;
+    }
+    try {
+      const response = await fetch(`${API_BASE}/auth/csrf-token`, {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: { 'Accept': 'application/json' }
+      });
+      if (response.ok) {
+        const json = await response.json();
+        if (json && json.data && json.data.csrf_token) {
+          cachedCsrfToken = json.data.csrf_token;
+          return cachedCsrfToken;
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to retrieve CSRF token:', e.message);
+    }
+    return cachedCsrfToken;
   }
 
   /**
-   * Stage 3 Text Analysis Client
-   * Target: POST /api/analyze/text
+   * Internal HTTP request helper enforcing same-origin credentials,
+   * CSRF protection, and error propagation.
    */
-  async function submitTextAnalysis(text) {
+  async function request(endpoint, options = {}) {
+    const method = (options.method || 'GET').toUpperCase();
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    const url = endpoint.startsWith('http') ? endpoint : `${API_BASE}${cleanEndpoint}`;
+
+    const headers = options.headers ? { ...options.headers } : {};
+
+    // For non-GET requests without FormData, default to application/json
+    if (!options.isFormData && !headers['Content-Type'] && method !== 'GET') {
+      headers['Content-Type'] = 'application/json';
+    }
+    if (!headers['Accept']) {
+      headers['Accept'] = 'application/json';
+    }
+
+    // Attach CSRF token on state-changing requests if available
+    const isStateChanging = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method);
+    if (isStateChanging) {
+      const token = await getCsrfToken();
+      if (token) {
+        headers['X-CSRF-Token'] = token;
+      }
+    }
+
+    const fetchOptions = {
+      method,
+      headers,
+      credentials: 'same-origin'
+    };
+
+    if (options.body) {
+      fetchOptions.body = options.body;
+    }
+
+    const response = await fetch(url, fetchOptions);
+
+    // If 403 CSRF_ERROR occurs on a state-changing request, refresh token and retry once
+    if (response.status === 403 && isStateChanging && !options._retried) {
+      const errorData = await response.clone().json().catch(() => null);
+      if (errorData && errorData.error && errorData.error.code === 'CSRF_ERROR') {
+        const refreshedToken = await getCsrfToken(true);
+        if (refreshedToken) {
+          headers['X-CSRF-Token'] = refreshedToken;
+          return request(endpoint, { ...options, headers, _retried: true });
+        }
+      }
+    }
+
+    let resultJson = null;
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      resultJson = await response.json().catch(() => null);
+    }
+
+    if (!response.ok) {
+      const message = (resultJson && resultJson.error && resultJson.error.message) ||
+                      (resultJson && resultJson.message) ||
+                      `HTTP error ${response.status}: ${response.statusText}`;
+      const code = (resultJson && resultJson.error && resultJson.error.code) || 'HTTP_ERROR';
+      const error = new Error(message);
+      error.status = response.status;
+      error.code = code;
+      error.response = resultJson;
+      throw error;
+    }
+
+    return resultJson;
+  }
+
+  /**
+   * Health Check
+   * Target: GET /api/health
+   */
+  async function checkBackendConnection() {
+    try {
+      const res = await request('/health', { method: 'GET' });
+      return {
+        connected: res && res.success === true,
+        data: res ? res.data : null,
+        message: res ? res.message : 'API is operational.'
+      };
+    } catch (e) {
+      return {
+        connected: false,
+        error: e.message,
+        message: 'Could not connect to backend API.'
+      };
+    }
+  }
+
+  /**
+   * User Registration
+   * Target: POST /api/auth/register
+   * Payload: { username, email, password }
+   */
+  async function register(userData) {
+    if (!userData || !userData.username || !userData.email || !userData.password) {
+      throw new Error('Registration error: username, email, and password are required.');
+    }
+    return request('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({
+        username: String(userData.username).trim(),
+        email: String(userData.email).trim().toLowerCase(),
+        password: String(userData.password)
+      })
+    });
+  }
+
+  /**
+   * User Login
+   * Target: POST /api/auth/login
+   * Payload: { username_or_email, password }
+   */
+  async function login(credentials) {
+    if (!credentials || (!credentials.username_or_email && !credentials.email && !credentials.username) || !credentials.password) {
+      throw new Error('Login error: username/email and password are required.');
+    }
+    const identifier = String(credentials.username_or_email || credentials.email || credentials.username).trim();
+    const res = await request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        username_or_email: identifier,
+        password: String(credentials.password)
+      })
+    });
+    if (res && res.data && res.data.csrf_token) {
+      cachedCsrfToken = res.data.csrf_token;
+    }
+    return res;
+  }
+
+  /**
+   * User Logout
+   * Target: POST /api/auth/logout
+   */
+  async function logout() {
+    const res = await request('/auth/logout', {
+      method: 'POST'
+    });
+    cachedCsrfToken = null;
+    return res;
+  }
+
+  /**
+   * Authenticated User Profile
+   * Target: GET /api/auth/me
+   */
+  async function getMe() {
+    return request('/auth/me', { method: 'GET' });
+  }
+
+  /**
+   * Text Analysis (Single Message)
+   * Target: POST /api/analyze/text
+   * Payload: { text, save: boolean }
+   */
+  async function submitTextAnalysis(text, saveOptIn = false) {
     if (!text || typeof text !== 'string' || !text.trim()) {
       throw new Error('Analysis payload error: text content cannot be empty.');
     }
-
-    // Prepare standard JSON payload
-    const payload = {
-      text: text.trim()
-    };
-
-    // Return structured representation for Stage 3 UI display
-    return {
-      endpoint: config.ENDPOINTS.ANALYZE_TEXT,
+    return request('/analyze/text', {
       method: 'POST',
-      payload: payload,
-      status: 'PENDING_BACKEND',
-      message: 'Text validated and formatted for submission to POST /api/analyze/text.'
-    };
+      body: JSON.stringify({
+        text: text.trim(),
+        save: Boolean(saveOptIn)
+      })
+    });
   }
 
   /**
-   * Stage 3 File Analysis Client
+   * Document File Batch Analysis (.csv, .txt)
    * Target: POST /api/analyze/file
+   * Payload: FormData with form field 'file'
    */
   async function submitFileAnalysis(file) {
     if (!file) {
       throw new Error('Analysis payload error: no document file selected.');
     }
+    const formData = new FormData();
+    formData.append('file', file);
 
-    const fileMeta = {
-      name: file.name,
-      sizeBytes: file.size,
-      sizeFormatted: (file.size / 1024).toFixed(1) + ' KB',
-      type: file.type || 'text/plain'
-    };
-
-    return {
-      endpoint: config.ENDPOINTS.ANALYZE_FILE,
+    return request('/analyze/file', {
       method: 'POST',
-      fileMeta: fileMeta,
-      status: 'PENDING_BACKEND',
-      message: 'File prepared for multipart submission to POST /api/analyze/file.'
-    };
+      body: formData,
+      isFormData: true
+    });
   }
 
   /**
-   * Stage 3 Image OCR Analysis Client
+   * Chat Screenshot OCR Analysis (.png, .jpg, .jpeg)
    * Target: POST /api/analyze/image
+   * Payload: FormData with form field 'image'
    */
   async function submitImageAnalysis(imageFile) {
     if (!imageFile) {
       throw new Error('Analysis payload error: no image file selected.');
     }
+    const formData = new FormData();
+    formData.append('image', imageFile);
 
-    const imageMeta = {
-      name: imageFile.name,
-      sizeBytes: imageFile.size,
-      sizeFormatted: (imageFile.size / 1024).toFixed(1) + ' KB',
-      type: imageFile.type
-    };
-
-    return {
-      endpoint: config.ENDPOINTS.ANALYZE_IMAGE,
+    return request('/analyze/image', {
       method: 'POST',
-      imageMeta: imageMeta,
-      status: 'PENDING_BACKEND',
-      message: 'Image prepared for OCR extraction and classification via POST /api/analyze/image.'
-    };
+      body: formData,
+      isFormData: true
+    });
   }
 
   /**
-   * Stage 3 Conversation Analysis Client
+   * Multi-Turn Sequential Conversation Analysis
    * Target: POST /api/analyze/conversation
+   * Payload: { messages: [ { text, speaker, timestamp } ] }
    */
   async function submitConversationAnalysis(messages) {
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      throw new Error('Analysis payload error: conversation must contain at least one message.');
+    if (!messages || !Array.isArray(messages) || messages.length < 2 || messages.length > 50) {
+      throw new Error('Analysis payload error: conversation must contain between 2 and 50 messages.');
     }
-
-    return {
-      endpoint: config.ENDPOINTS.ANALYZE_CONVERSATION,
+    return request('/analyze/conversation', {
       method: 'POST',
-      messageCount: messages.length,
-      messages: messages,
-      status: 'PENDING_BACKEND',
-      message: 'Conversation transcript formatted for submission to POST /api/analyze/conversation.'
-    };
+      body: JSON.stringify({ messages })
+    });
   }
 
   /**
-   * Stage 4 User Dashboard Client
+   * User Dashboard Statistics
    * Target: GET /api/dashboard
    */
   async function getDashboardData() {
-    return {
-      endpoint: config.ENDPOINTS.DASHBOARD || '/api/dashboard',
-      method: 'GET',
-      status: 'PENDING_BACKEND',
-      message: 'Dashboard metrics pending backend schema confirmation. No fabricated statistics are displayed.'
-    };
+    return request('/dashboard', { method: 'GET' });
   }
 
   /**
-   * Stage 4 Analyses History Client
+   * User Analysis History
    * Target: GET /api/analyses
+   * Query params: page, limit, category
    */
-  async function getAnalysesHistory() {
-    return {
-      endpoint: config.ENDPOINTS.ANALYSES || '/api/analyses',
-      method: 'GET',
-      status: 'PENDING_BACKEND',
-      message: 'History records pending backend schema confirmation. Unsupported pagination parameters are omitted.'
-    };
+  async function getAnalysesHistory(params = {}) {
+    const query = new URLSearchParams();
+    if (params.page) query.append('page', params.page);
+    if (params.limit) query.append('limit', params.limit);
+    if (params.category) query.append('category', params.category);
+
+    const queryString = query.toString();
+    const endpoint = queryString ? `/analyses?${queryString}` : '/analyses';
+    return request(endpoint, { method: 'GET' });
   }
 
   /**
-   * Stage 4 Delete Analysis Record
+   * Delete Saved Analysis Record
    * Target: DELETE /api/analyses/{id}
    */
   async function deleteAnalysis(id) {
     if (!id) {
       throw new Error('Analysis ID is required for deletion.');
     }
-
-    return {
-      endpoint: `/api/analyses/${encodeURIComponent(id)}`,
-      method: 'DELETE',
-      status: 'PENDING_BACKEND',
-      message: 'Deletion prepared for DELETE /api/analyses/' + id + '. Action kept disabled until backend integration requirements are confirmed.'
-    };
+    return request(`/analyses/${encodeURIComponent(id)}`, {
+      method: 'DELETE'
+    });
   }
 
   /**
-   * Stage 4 Incident Report Client
-   * Target: GET /api/reports/{id}
+   * Export User Data
+   * Target: GET /api/user/export
+   * Returns: { success: true, data: { profile, saved_analyses, feedback } }
+   * Enforces authenticated session.
+   */
+  async function exportUserData() {
+    return request('/user/export', { method: 'GET' });
+  }
+
+  /**
+   * Delete User Account & Associated Data
+   * Target: DELETE /api/user/account
+   * Enforces CSRF token and authenticated session.
+   * Clears cached CSRF token upon successful deletion.
+   */
+  async function deleteAccount() {
+    const res = await request('/user/account', {
+      method: 'DELETE'
+    });
+    cachedCsrfToken = null;
+    return res;
+  }
+
+  /**
+   * Report Download Placeholder
+   * Notice: Unimplemented in backend; kept as honest placeholder.
    */
   async function getReport(id) {
-    if (!id) {
-      throw new Error('Analysis/Report ID is required.');
-    }
-
-    const endpoint = (config.ENDPOINTS.REPORT_BY_ID && typeof config.ENDPOINTS.REPORT_BY_ID === 'function')
-      ? config.ENDPOINTS.REPORT_BY_ID(id)
-      : `/api/reports/${encodeURIComponent(id)}`;
-
     return {
-      endpoint: endpoint,
-      method: 'GET',
       status: 'PENDING_BACKEND',
-      message: 'Report request prepared for ' + endpoint + '. Response format (JSON vs PDF) pending backend confirmation.'
+      message: 'Report download endpoint is not implemented on the backend.'
     };
   }
 
   /**
-   * Stage 4 Classification Feedback Client
-   * Target: POST /api/feedback
+   * Feedback Submission Placeholder
+   * Notice: Unimplemented in backend; kept as honest placeholder.
    */
   async function submitFeedback(payload) {
-    if (!payload) {
-      throw new Error('Feedback payload cannot be empty.');
-    }
-
     return {
-      endpoint: config.ENDPOINTS.FEEDBACK || '/api/feedback',
-      method: 'POST',
-      payload: payload,
       status: 'PENDING_BACKEND',
-      message: 'Feedback prepared for POST /api/feedback. Submission kept disabled until backend confirms its request schema.'
+      message: 'Feedback submission endpoint is not implemented on the backend.'
     };
   }
 
   /**
-   * Stage 5 Admin Dashboard Client
-   * Target: GET /api/admin/dashboard
+   * Admin Dashboard Placeholder
+   * Notice: Unimplemented in backend; kept as harmless placeholder for admin.js.
    */
   async function getAdminDashboard() {
     return {
-      endpoint: (config.ENDPOINTS && config.ENDPOINTS.ADMIN_DASHBOARD) || '/api/admin/dashboard',
-      method: 'GET',
       status: 'PENDING_BACKEND',
-      message: 'Admin dashboard metrics pending backend schema confirmation and authorization middleware.'
+      message: 'Admin dashboard endpoint is not implemented on the backend.'
     };
   }
 
   // Export to global window scope
   window.CyAwareAPI = Object.freeze({
     checkBackendConnection,
+    getCsrfToken,
+    register,
+    login,
+    logout,
+    getMe,
     submitTextAnalysis,
     submitFileAnalysis,
     submitImageAnalysis,
@@ -248,9 +403,10 @@
     getDashboardData,
     getAnalysesHistory,
     deleteAnalysis,
+    exportUserData,
+    deleteAccount,
     getReport,
     submitFeedback,
     getAdminDashboard
   });
 })();
-

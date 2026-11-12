@@ -16,8 +16,55 @@
   'use strict';
 
   document.addEventListener('DOMContentLoaded', function () {
-    initAdminConsole();
+    verifyAndInitAdminConsole();
   });
+
+  /**
+   * Verify administrative role before revealing console
+   * Enforces client-side defense-in-depth:
+   * - Guests are redirected to login.html
+   * - Ordinary users ('user') are redirected to dashboard.html
+   * - Only 'admin' role unhides #main-content and initializes tabs
+   */
+  async function verifyAndInitAdminConsole() {
+    const mainContent = document.getElementById('main-content');
+
+    let user = null;
+    try {
+      if (window.CyAwareApp && typeof window.CyAwareApp.getSessionUser === 'function') {
+        user = await window.CyAwareApp.getSessionUser();
+      } else if (window.CyAwareAPI && typeof window.CyAwareAPI.getMe === 'function') {
+        const res = await window.CyAwareAPI.getMe();
+        if (res && res.success && res.data && res.data.user) {
+          user = res.data.user;
+        }
+      }
+    } catch (err) {
+      user = null;
+    }
+
+    // 1. Guest Handling
+    if (!user) {
+      window.location.replace('login.html');
+      return;
+    }
+
+    // 2. Ordinary Authenticated User Handling
+    if (user.role !== 'admin') {
+      if (window.CyAwareApp && typeof window.CyAwareApp.showToast === 'function') {
+        window.CyAwareApp.showToast('Access denied: Administrator privileges required.', 'danger');
+      }
+      window.location.replace('dashboard.html');
+      return;
+    }
+
+    // 3. Administrator Handling: Reveal existing admin interface
+    if (mainContent) {
+      mainContent.style.display = '';
+    }
+
+    initAdminConsole();
+  }
 
   async function initAdminConsole() {
     initAccessibleTabs();

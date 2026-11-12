@@ -1,28 +1,39 @@
 /**
- * CyAware — Client-Side Authentication Form Validation
+ * CyAware — Client-Side Authentication Controller & Form Validation
  * File: frontend/js/auth-validation.js
  * 
- * Implements Stage 2 requirements:
- * - Client-side validation: required fields, valid email regex, password matching, length checks.
- * - Password visibility toggle.
- * - Interactive validation feedback with accessible ARIA alerts.
- * - STRICT SEPARATION: No real authentication, no backend logic, no password storage, no invented API fields.
+ * Connects frontend authentication forms directly to the CyAware backend API:
+ * - Registration: POST /api/auth/register (username, email, password)
+ * - Login: POST /api/auth/login (username_or_email, password)
+ * - Session Management: Server-managed HttpOnly session cookies (SameSite=Lax)
+ * - CSRF Protection: Managed transparently via window.CyAwareAPI
+ * 
+ * Strict Project Rules:
+ * - Passwords, session IDs, and authentication tokens are NEVER stored in localStorage/sessionStorage.
+ * - Real backend responses dictate authentication and error states.
  */
 
 (function () {
   'use strict';
 
-  // Email format regex (RFC 5322 compliant basic pattern)
-  const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+  // Backend validation constraints
+  const USERNAME_REGEX = /^[a-zA-Z0-9_]{3,30}$/;
+  const EMAIL_REGEX = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
   // ==========================================================================
   // Validation Utilities
   // ==========================================================================
+  function isValidUsername(username) {
+    return USERNAME_REGEX.test(String(username).trim());
+  }
+
   function isValidEmail(email) {
-    return EMAIL_REGEX.test(String(email).trim());
+    const trimmed = String(email).trim();
+    return trimmed.length <= 120 && EMAIL_REGEX.test(trimmed);
   }
 
   function setFieldError(field, errorMessage) {
+    if (!field) return;
     field.classList.add('is-invalid');
     field.classList.remove('is-valid');
     field.setAttribute('aria-invalid', 'true');
@@ -35,6 +46,7 @@
   }
 
   function clearFieldError(field) {
+    if (!field) return;
     field.classList.remove('is-invalid');
     field.removeAttribute('aria-invalid');
 
@@ -46,8 +58,43 @@
   }
 
   function setFieldValid(field) {
+    if (!field) return;
     clearFieldError(field);
     field.classList.add('is-valid');
+  }
+
+  function showStatusBanner(banner, message, type = 'danger') {
+    if (!banner) return;
+    banner.className = `alert alert-${type}`;
+    banner.style.display = 'flex';
+
+    let iconSvg = '';
+    if (type === 'success') {
+      iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+    } else if (type === 'warning') {
+      iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+    } else {
+      iconSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+    }
+
+    banner.innerHTML = `
+      <div class="alert-icon">${iconSvg}</div>
+      <div class="alert-content">
+        <p style="margin: 0; font-size: 0.9rem;">${escapeHtml(message)}</p>
+      </div>
+    `;
+  }
+
+  function hideStatusBanner(banner) {
+    if (!banner) return;
+    banner.style.display = 'none';
+    banner.innerHTML = '';
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   }
 
   // ==========================================================================
@@ -66,9 +113,7 @@
         input.setAttribute('type', isPassword ? 'text' : 'password');
         this.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
 
-        // Update toggle icon
         if (isPassword) {
-          // Eye-off icon
           this.innerHTML = `
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
@@ -76,7 +121,6 @@
             </svg>
           `;
         } else {
-          // Eye icon
           this.innerHTML = `
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -96,13 +140,10 @@
 
     let score = 0;
     if (password.length >= 8) score++;
-    if (/[A-Z]/.test(password) && /[a-z]/.test(password)) score++;
-    if (/[0-9]/.test(password) || /[^A-Za-z0-9]/.test(password)) score++;
+    if (/[a-zA-Z]/.test(password) && /[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
 
-    // Ensure non-empty passwords have at least score 1 (Weak)
-    if (score === 0) {
-      score = 1;
-    }
+    if (score === 0) score = 1;
 
     let label = 'Weak';
     if (score === 2) label = 'Medium';
@@ -128,7 +169,7 @@
       }
     });
 
-    label.textContent = text ? `Strength: ${text}` : 'Minimum 8 characters with numbers or symbols';
+    label.textContent = text ? `Strength: ${text}` : 'Minimum 8 characters with letters and numbers';
   }
 
   // ==========================================================================
@@ -138,39 +179,37 @@
     const form = document.getElementById('login-form');
     if (!form) return;
 
-    const emailInput = document.getElementById('login-email');
+    const identifierInput = document.getElementById('login-email');
     const passwordInput = document.getElementById('login-password');
     const statusBanner = document.getElementById('login-status-banner');
+    const submitBtn = form.querySelector('button[type="submit"]');
 
-    // Real-time input cleanup
-    if (emailInput) {
-      emailInput.addEventListener('input', () => clearFieldError(emailInput));
-      emailInput.addEventListener('blur', function () {
-        const val = this.value.trim();
-        if (val && !isValidEmail(val)) {
-          setFieldError(this, 'Please enter a valid email address (e.g. user@example.com).');
-        }
+    if (identifierInput) {
+      identifierInput.addEventListener('input', () => {
+        clearFieldError(identifierInput);
+        hideStatusBanner(statusBanner);
       });
     }
 
     if (passwordInput) {
-      passwordInput.addEventListener('input', () => clearFieldError(passwordInput));
+      passwordInput.addEventListener('input', () => {
+        clearFieldError(passwordInput);
+        hideStatusBanner(statusBanner);
+      });
     }
 
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
+      hideStatusBanner(statusBanner);
       let isValid = true;
 
-      // 1. Validate Email
-      const emailVal = emailInput ? emailInput.value.trim() : '';
-      if (!emailVal) {
-        setFieldError(emailInput, 'Email address is required.');
-        isValid = false;
-      } else if (!isValidEmail(emailVal)) {
-        setFieldError(emailInput, 'Please enter a valid email address.');
+      // 1. Validate Identifier (Username or Email)
+      const identifierVal = identifierInput ? identifierInput.value.trim() : '';
+      if (!identifierVal) {
+        setFieldError(identifierInput, 'Username or email address is required.');
         isValid = false;
       } else {
-        setFieldValid(emailInput);
+        setFieldValid(identifierInput);
       }
 
       // 2. Validate Password
@@ -183,35 +222,62 @@
       }
 
       if (!isValid) {
-        // Focus first invalid input
         const firstInvalid = form.querySelector('.is-invalid');
         if (firstInvalid) firstInvalid.focus();
         return;
       }
 
-      // Stage 2 Demonstration Notice (No real authentication or backend request)
-      if (statusBanner) {
-        statusBanner.className = 'alert alert-info';
-        statusBanner.style.display = 'flex';
-        statusBanner.innerHTML = `
-          <div class="alert-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="16" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-          </div>
-          <div class="alert-content">
-            <div class="alert-title">Stage 2 Validation Passed</div>
-            <p style="margin: 0; font-size: 0.88rem;">
-              Client-side credentials validation succeeded. As per Stage 2 separation rules, real network authentication targeting <code>POST /api/auth/login</code> will be connected in future integration stages.
-            </p>
-          </div>
-        `;
+      // Check API client availability
+      if (!window.CyAwareAPI || !window.CyAwareAPI.login) {
+        showStatusBanner(statusBanner, 'API service unavailable. Please check configuration.');
+        return;
       }
 
-      if (window.CyAwareApp && window.CyAwareApp.showToast) {
-        window.CyAwareApp.showToast('Login form validation succeeded (Stage 2 Demonstration).', 'success');
+      // Set Loading State
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : 'Sign In';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner" style="margin-right: 0.5rem;"></span> Signing In...';
+      }
+
+      try {
+        const response = await window.CyAwareAPI.login({
+          username_or_email: identifierVal,
+          password: passwordVal
+        });
+
+        if (response && response.success) {
+          if (window.CyAwareApp && window.CyAwareApp.showToast) {
+            window.CyAwareApp.showToast('Login successful! Redirecting...', 'success');
+          }
+          // Redirect to authenticated dashboard workspace
+          window.location.href = 'dashboard.html';
+        } else {
+          showStatusBanner(statusBanner, (response && response.message) || 'Login failed.');
+        }
+      } catch (err) {
+        console.warn('Login failure:', err.code, err.message);
+
+        let userMsg = err.message || 'An error occurred during sign in.';
+        if (err.code === 'INVALID_CREDENTIALS') {
+          userMsg = 'Invalid username/email or password.';
+        } else if (err.code === 'ACCOUNT_DISABLED') {
+          userMsg = 'This account has been deactivated. Please contact an administrator.';
+        } else if (err.code === 'RATE_LIMITED' || err.status === 429) {
+          userMsg = 'Too many failed login attempts. Please wait 5 minutes before trying again.';
+        } else if (err.code === 'VALIDATION_ERROR') {
+          userMsg = err.message || 'Please provide a valid username/email and password.';
+        }
+
+        showStatusBanner(statusBanner, userMsg, 'danger');
+        if (window.CyAwareApp && window.CyAwareApp.showToast) {
+          window.CyAwareApp.showToast(userMsg, 'danger');
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnHtml;
+        }
       }
     });
   }
@@ -223,24 +289,40 @@
     const form = document.getElementById('register-form');
     if (!form) return;
 
-    const nameInput = document.getElementById('register-name');
+    const usernameInput = document.getElementById('register-username');
     const emailInput = document.getElementById('register-email');
     const passwordInput = document.getElementById('register-password');
     const confirmPasswordInput = document.getElementById('register-confirm-password');
     const termsCheck = document.getElementById('register-terms');
     const statusBanner = document.getElementById('register-status-banner');
+    const submitBtn = form.querySelector('button[type="submit"]');
 
-    // Real-time input handlers
-    if (nameInput) {
-      nameInput.addEventListener('input', () => clearFieldError(nameInput));
+    if (usernameInput) {
+      usernameInput.addEventListener('input', () => {
+        clearFieldError(usernameInput);
+        hideStatusBanner(statusBanner);
+      });
+      usernameInput.addEventListener('blur', function () {
+        const val = this.value.trim();
+        if (val && !isValidUsername(val)) {
+          setFieldError(this, 'Username must be 3-30 characters long and contain only letters, numbers, and underscores.');
+        } else if (val) {
+          setFieldValid(this);
+        }
+      });
     }
 
     if (emailInput) {
-      emailInput.addEventListener('input', () => clearFieldError(emailInput));
+      emailInput.addEventListener('input', () => {
+        clearFieldError(emailInput);
+        hideStatusBanner(statusBanner);
+      });
       emailInput.addEventListener('blur', function () {
         const val = this.value.trim();
         if (val && !isValidEmail(val)) {
           setFieldError(this, 'Please enter a valid email address (e.g. user@example.com).');
+        } else if (val) {
+          setFieldValid(this);
         }
       });
     }
@@ -248,9 +330,9 @@
     if (passwordInput) {
       passwordInput.addEventListener('input', function () {
         clearFieldError(passwordInput);
+        hideStatusBanner(statusBanner);
         updateStrengthMeter(this.value);
 
-        // Also re-validate confirmation if already typed
         if (confirmPasswordInput && confirmPasswordInput.value) {
           if (confirmPasswordInput.value !== this.value) {
             setFieldError(confirmPasswordInput, 'Passwords do not match.');
@@ -264,6 +346,7 @@
     if (confirmPasswordInput) {
       confirmPasswordInput.addEventListener('input', function () {
         clearFieldError(confirmPasswordInput);
+        hideStatusBanner(statusBanner);
         if (passwordInput && this.value && this.value !== passwordInput.value) {
           setFieldError(this, 'Passwords do not match.');
         } else if (passwordInput && this.value && this.value === passwordInput.value) {
@@ -273,27 +356,31 @@
     }
 
     if (termsCheck) {
-      termsCheck.addEventListener('change', () => clearFieldError(termsCheck));
+      termsCheck.addEventListener('change', () => {
+        clearFieldError(termsCheck);
+        hideStatusBanner(statusBanner);
+      });
     }
 
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
+      hideStatusBanner(statusBanner);
       let isValid = true;
 
-      // 1. Validate Name
-      const nameVal = nameInput ? nameInput.value.trim() : '';
-      if (!nameVal) {
-        setFieldError(nameInput, 'Full name is required.');
+      // 1. Validate Username
+      const usernameVal = usernameInput ? usernameInput.value.trim() : '';
+      if (!usernameVal) {
+        setFieldError(usernameInput, 'Username is required.');
         isValid = false;
-      } else if (nameVal.length < 2) {
-        setFieldError(nameInput, 'Name must be at least 2 characters long.');
+      } else if (!isValidUsername(usernameVal)) {
+        setFieldError(usernameInput, 'Username must be 3-30 characters long and contain only letters, numbers, and underscores.');
         isValid = false;
       } else {
-        setFieldValid(nameInput);
+        setFieldValid(usernameInput);
       }
 
       // 2. Validate Email
-      const emailVal = emailInput ? emailInput.value.trim() : '';
+      const emailVal = emailInput ? emailInput.value.trim().toLowerCase() : '';
       if (!emailVal) {
         setFieldError(emailInput, 'Email address is required.');
         isValid = false;
@@ -304,13 +391,16 @@
         setFieldValid(emailInput);
       }
 
-      // 3. Validate Password
+      // 3. Validate Password (backend requires: min 8 chars, >= 1 letter, >= 1 number)
       const passwordVal = passwordInput ? passwordInput.value : '';
       if (!passwordVal) {
         setFieldError(passwordInput, 'Password is required.');
         isValid = false;
       } else if (passwordVal.length < 8) {
         setFieldError(passwordInput, 'Password must be at least 8 characters long.');
+        isValid = false;
+      } else if (!/[a-zA-Z]/.test(passwordVal) || !/[0-9]/.test(passwordVal)) {
+        setFieldError(passwordInput, 'Password must contain at least one letter and one number.');
         isValid = false;
       } else {
         setFieldValid(passwordInput);
@@ -342,30 +432,68 @@
         return;
       }
 
-      // Stage 2 Demonstration Notice (No real registration or database storage)
-      if (statusBanner) {
-        statusBanner.className = 'alert alert-info';
-        statusBanner.style.display = 'flex';
-        statusBanner.innerHTML = `
-          <div class="alert-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="16" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-          </div>
-          <div class="alert-content">
-            <div class="alert-title">Stage 2 Validation Passed</div>
-            <p style="margin: 0 0 0.5rem 0; font-size: 0.88rem;">
-              Registration fields are fully valid. Real account registration via <code>POST /api/auth/register</code> will be hooked up in future backend integration.
-            </p>
-            <a href="login.html" class="btn btn-primary btn-sm" style="display: inline-block;">Proceed to Sign In</a>
-          </div>
-        `;
+      // Check API client availability
+      if (!window.CyAwareAPI || !window.CyAwareAPI.register) {
+        showStatusBanner(statusBanner, 'API service unavailable. Please check configuration.');
+        return;
       }
 
-      if (window.CyAwareApp && window.CyAwareApp.showToast) {
-        window.CyAwareApp.showToast('Registration validation succeeded (Stage 2 Demonstration).', 'success');
+      // Set Loading State
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : 'Create Account';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner" style="margin-right: 0.5rem;"></span> Creating Account...';
+      }
+
+      try {
+        const response = await window.CyAwareAPI.register({
+          username: usernameVal,
+          email: emailVal,
+          password: passwordVal
+        });
+
+        if (response && response.success) {
+          form.reset();
+          if (usernameInput) clearFieldError(usernameInput);
+          if (emailInput) clearFieldError(emailInput);
+          if (passwordInput) clearFieldError(passwordInput);
+          if (confirmPasswordInput) clearFieldError(confirmPasswordInput);
+
+          const successMsg = 'Account created successfully! You can now sign in.';
+          showStatusBanner(statusBanner, successMsg, 'success');
+
+          // Append explicit login CTA button to banner
+          statusBanner.innerHTML += `
+            <div style="margin-top: 0.75rem;">
+              <a href="login.html" class="btn btn-primary btn-sm" style="display: inline-block;">Proceed to Sign In</a>
+            </div>
+          `;
+
+          if (window.CyAwareApp && window.CyAwareApp.showToast) {
+            window.CyAwareApp.showToast('Account created successfully! Please sign in.', 'success');
+          }
+        } else {
+          showStatusBanner(statusBanner, (response && response.message) || 'Registration failed.');
+        }
+      } catch (err) {
+        console.warn('Registration failure:', err.code, err.message);
+
+        let userMsg = err.message || 'An error occurred during account registration.';
+        if (err.code === 'USER_EXISTS' || err.status === 409) {
+          userMsg = 'Username or email is already registered. Please choose another or sign in.';
+        } else if (err.code === 'VALIDATION_ERROR') {
+          userMsg = err.message || 'Registration data is invalid. Please check your entries.';
+        }
+
+        showStatusBanner(statusBanner, userMsg, 'danger');
+        if (window.CyAwareApp && window.CyAwareApp.showToast) {
+          window.CyAwareApp.showToast(userMsg, 'danger');
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnHtml;
+        }
       }
     });
   }
@@ -377,4 +505,3 @@
     initRegisterForm();
   });
 })();
-
